@@ -126,6 +126,7 @@ tbody tr:hover td{background:#f5f5f7}
 
 <script>
 const PROXY = 'https://ads-dashboard-production-d61d.up.railway.app';
+const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxcowU_GWpXJX-_PN5dz0ERQ137w2P9D5JTV6NDZstUXLz2LDqoH0jmR3kZA044ak8/exec';
 let CUSTOMER_ID = '';
 let chartSpend, chartConv;
 
@@ -161,8 +162,9 @@ async function loadData(){
   try{
     const r = await fetch(`${PROXY}?customer_id=${CUSTOMER_ID}&level=${level}&since=${since}&until=${until}`);
     const text = await r.text();
-    if(text.includes('Clic aquí')){
-      document.getElementById('errMsg').innerHTML='Necesitás autorizar. <a href="'+PROXY+'?auth=1" target="_blank">Clic aquí</a> y volvé a intentar.';
+    if(text.includes('Clic aquí') || text.includes('authoriz')){
+      const authUrl = `${APPS_SCRIPT}?customer_id=${CUSTOMER_ID}&level=${level}&since=${since}&until=${until}`;
+      document.getElementById('errMsg').innerHTML=`<span style="color:#ff3b30">Necesitás autorizar. <a href="${authUrl}" target="_blank">Clic aquí</a>, autorizá con Google y volvé a intentar.</span>`;
       st.textContent='Sin autorización';st.className='status-bar status-warn';
       return;
     }
