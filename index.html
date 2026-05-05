@@ -9,7 +9,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;padding:1.5rem}
 h1{font-size:20px;font-weight:600;margin-bottom:1.25rem;color:#1d1d1f}
-h2{font-size:15px;font-weight:600;margin-bottom:.75rem;color:#1d1d1f}
+h2{font-size:15px;font-weight:600;color:#1d1d1f}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.25rem}
 .kpi{background:#fff;border-radius:12px;padding:.9rem 1rem;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .kpi-label{font-size:12px;color:#86868b;margin-bottom:4px}
@@ -32,13 +32,15 @@ h2{font-size:15px;font-weight:600;margin-bottom:.75rem;color:#1d1d1f}
 .section{background:#fff;border-radius:12px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:1.25rem}
 .section-header{display:flex;align-items:center;gap:8px;margin-bottom:.75rem}
 .type-badge{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
-.pmax-badge{background:#ede9ff;color:#4c1d95}
 .search-badge{background:#dbeafe;color:#1e40af}
+.pmax-badge{background:#ede9ff;color:#4c1d95}
 .video-badge{background:#fce7f3;color:#9d174d}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem}
+.filters input,.filters select{font-size:12px;padding:5px 8px;border-radius:8px;border:1px solid #d2d2d7;background:#f5f5f7;color:#1d1d1f;min-width:160px}
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead th{background:#f5f5f7;padding:10px 12px;text-align:left;font-weight:500;color:#86868b;border-bottom:1px solid #e5e5ea;white-space:nowrap}
-tbody td{padding:9px 12px;border-bottom:1px solid #f5f5f7;color:#1d1d1f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+tbody td{padding:9px 12px;border-bottom:1px solid #f5f5f7;color:#1d1d1f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:#f5f5f7}
 .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;font-weight:500}
@@ -53,14 +55,13 @@ tbody tr:hover td{background:#f5f5f7}
 .status-ok{color:#34c759}
 .status-err{color:#ff3b30}
 .status-warn{color:#ff9500}
-.empty{font-size:13px;color:#86868b;padding:.75rem;text-align:center}
 @media(max-width:600px){.charts-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
- 
+
 <h1>Dashboard Google Ads</h1>
- 
+
 <div class="connect-panel" id="connectPanel">
   <h3>Conectar cuenta</h3>
   <p>Ingresá el Customer ID de la cuenta que querés ver.</p>
@@ -71,19 +72,14 @@ tbody tr:hover td{background:#f5f5f7}
   <div class="err" id="errMsg"></div>
   <div class="info">Los datos se obtienen via tu proxy de Apps Script.</div>
 </div>
- 
+
 <div class="config-bar">
   <label>Desde:</label><input type="date" id="dateFrom"/>
   <label>Hasta:</label><input type="date" id="dateTo"/>
-  <select id="levelSel">
-    <option value="campaign">Campañas</option>
-    <option value="adset">Grupos de anuncios</option>
-    <option value="ad">Anuncios</option>
-  </select>
   <button class="btn" onclick="loadData()">Actualizar</button>
   <span class="status-bar" id="connStatus"></span>
 </div>
- 
+
 <div class="kpi-grid">
   <div class="kpi"><div class="kpi-label">Gasto total</div><div class="kpi-value" id="k-spend">—</div></div>
   <div class="kpi"><div class="kpi-label">Impresiones</div><div class="kpi-value" id="k-imp">—</div></div>
@@ -94,70 +90,92 @@ tbody tr:hover td{background:#f5f5f7}
   <div class="kpi"><div class="kpi-label">Conversiones</div><div class="kpi-value" id="k-conv">—</div></div>
   <div class="kpi"><div class="kpi-label">Costo/conv.</div><div class="kpi-value" id="k-cpp">—</div></div>
 </div>
- 
-<!-- Tabla PMax -->
-<div class="section">
-  <div class="section-header">
-    <h2>Performance Max</h2>
-    <span class="type-badge pmax-badge">PMax</span>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead><tr>
-        <th style="width:40%">Nombre</th>
-        <th>Estado</th>
-        <th>Gasto</th>
-        <th>CTR</th>
-        <th>Conversiones</th>
-        <th>Costo/conv.</th>
-      </tr></thead>
-      <tbody id="tablePmax"><tr><td colspan="6" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
-    </table>
-  </div>
-</div>
- 
+
 <!-- Tabla Search -->
 <div class="section">
   <div class="section-header">
     <h2>Search</h2>
     <span class="type-badge search-badge">Search</span>
   </div>
+  <div class="filters">
+    <input type="text" id="filterSearchCampaign" placeholder="Filtrar por campaña..." oninput="renderTables()"/>
+    <select id="filterSearchCountry" onchange="renderTables()">
+      <option value="">Todos los países</option>
+    </select>
+  </div>
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th style="width:40%">Nombre</th>
+        <th style="width:35%">Nombre</th>
         <th>Estado</th>
+        <th>País</th>
         <th>Gasto</th>
         <th>CTR</th>
         <th>Conversiones</th>
         <th>Costo/conv.</th>
       </tr></thead>
-      <tbody id="tableSearch"><tr><td colspan="6" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
+      <tbody id="tableSearch"><tr><td colspan="7" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
     </table>
   </div>
 </div>
- 
+
+<!-- Tabla PMax -->
+<div class="section">
+  <div class="section-header">
+    <h2>Performance Max</h2>
+    <span class="type-badge pmax-badge">PMax</span>
+  </div>
+  <div class="filters">
+    <input type="text" id="filterPmaxCampaign" placeholder="Filtrar por campaña..." oninput="renderTables()"/>
+    <select id="filterPmaxCountry" onchange="renderTables()">
+      <option value="">Todos los países</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th style="width:35%">Nombre</th>
+        <th>Estado</th>
+        <th>País</th>
+        <th>Gasto</th>
+        <th>CTR</th>
+        <th>Conversiones</th>
+        <th>Costo/conv.</th>
+      </tr></thead>
+      <tbody id="tablePmax"><tr><td colspan="7" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
 <!-- Tabla Video -->
 <div class="section">
   <div class="section-header">
     <h2>Video</h2>
     <span class="type-badge video-badge">Video</span>
   </div>
+  <div class="filters">
+    <input type="text" id="filterVideoCampaign" placeholder="Filtrar por campaña..." oninput="renderTables()"/>
+    <select id="filterVideoCountry" onchange="renderTables()">
+      <option value="">Todos los países</option>
+    </select>
+  </div>
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th style="width:40%">Nombre</th>
+        <th style="width:35%">Nombre</th>
         <th>Estado</th>
+        <th>País</th>
         <th>Gasto</th>
         <th>CTR</th>
+        <th>CPM</th>
         <th>Conversiones</th>
         <th>Costo/conv.</th>
       </tr></thead>
-      <tbody id="tableVideo"><tr><td colspan="6" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
+      <tbody id="tableVideo"><tr><td colspan="8" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
     </table>
   </div>
 </div>
- 
+
 <!-- Gráficos -->
 <div class="charts-grid">
   <div class="chart-card">
@@ -169,33 +187,37 @@ tbody tr:hover td{background:#f5f5f7}
     <canvas id="chartConv" height="180"></canvas>
   </div>
 </div>
- 
+
 <script>
 const PROXY = 'https://ads-dashboard-production-d61d.up.railway.app';
 const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbxcowU_GWpXJX-_PN5dz0ERQ137w2P9D5JTV6NDZstUXLz2LDqoH0jmR3kZA044ak8/exec';
 let CUSTOMER_ID = '';
 let chartSpend, chartConv;
- 
+let allRows = [];
+
 (function(){
   const to = new Date(), from = new Date();
   from.setDate(from.getDate()-29);
   document.getElementById('dateTo').value = to.toISOString().split('T')[0];
   document.getElementById('dateFrom').value = from.toISOString().split('T')[0];
 })();
- 
+
 function curr(n){return n==null?'—':'$'+Number(n).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function num(n){return n==null?'—':Math.round(Number(n)).toLocaleString('es-AR');}
 function pct(n){return n==null?'—':(Number(n)*100).toFixed(2)+'%';}
 function shortName(name){return name.length>35?name.substring(0,33)+'…':name;}
- 
-function getCampaignType(name) {
+
+function getCampaignType(name){
   const n = name.toUpperCase();
-  if (n.includes('PMAX') || n.includes('PERFORMANCE MAX')) return 'pmax';
-  if (n.includes('SEARCH')) return 'search';
-  if (n.includes('VIDEO') || n.includes('YOUTUBE') || n.includes('YT')) return 'video';
+  if(n.includes('PMAX')||n.includes('PERFORMANCE MAX')) return 'pmax';
+  if(n.includes('SEARCH')) return 'search';
+  if(n.includes('VIDEO')||n.includes('YOUTUBE')||n.includes('YT')) return 'video';
   return 'other';
 }
- 
+
+function getName(r){return r.campaign?.name||r.adGroup?.name||'—';}
+function getStatus(r){return r.campaign?.status||r.adGroup?.status||'—';}
+
 async function connectAds(){
   const c = document.getElementById('customerInput').value.trim().replace(/-/g,'');
   if(!c){document.getElementById('errMsg').textContent='Ingresá el Customer ID.';return;}
@@ -203,38 +225,38 @@ async function connectAds(){
   document.getElementById('errMsg').textContent='';
   await loadData();
 }
- 
+
 async function loadData(){
   if(!CUSTOMER_ID){document.getElementById('errMsg').textContent='Ingresá el Customer ID primero.';return;}
-  const level = document.getElementById('levelSel').value;
   const since = document.getElementById('dateFrom').value;
   const until = document.getElementById('dateTo').value;
   const st = document.getElementById('connStatus');
   st.textContent='Cargando...';st.className='status-bar';
- 
-  ['tablePmax','tableSearch','tableVideo'].forEach(id => {
-    document.getElementById(id).innerHTML='<tr><td colspan="6" class="center">Cargando...</td></tr>';
+  ['tableSearch','tablePmax','tableVideo'].forEach(id=>{
+    const cols = id==='tableVideo'?8:7;
+    document.getElementById(id).innerHTML=`<tr><td colspan="${cols}" class="center">Cargando...</td></tr>`;
   });
- 
+
   try{
-    const r = await fetch(`${PROXY}?customer_id=${CUSTOMER_ID}&level=${level}&since=${since}&until=${until}`);
+    const r = await fetch(`${PROXY}?customer_id=${CUSTOMER_ID}&level=campaign&since=${since}&until=${until}`);
     const text = await r.text();
- 
-    if(text.includes('Clic aquí') || text.includes('authoriz')){
-      const authUrl = `${APPS_SCRIPT}?customer_id=${CUSTOMER_ID}&level=${level}&since=${since}&until=${until}`;
+    if(text.includes('Clic aquí')||text.includes('authoriz')){
+      const authUrl=`${APPS_SCRIPT}?customer_id=${CUSTOMER_ID}&level=campaign&since=${since}&until=${until}`;
       document.getElementById('errMsg').innerHTML=`<span style="color:#ff3b30">Necesitás autorizar. <a href="${authUrl}" target="_blank">Clic aquí</a>, autorizá con Google y volvé a intentar.</span>`;
       st.textContent='Sin autorización';st.className='status-bar status-warn';
       return;
     }
- 
     const d = JSON.parse(text);
     if(d.error){
       document.getElementById('errMsg').innerHTML=`<span style="color:#ff3b30">Error: ${d.error}</span>`;
       st.textContent='Error';st.className='status-bar status-err';
       return;
     }
- 
-    renderData(d.results||[], level);
+    allRows = d.results||[];
+    renderKPIs(allRows);
+    populateCountryFilters(allRows);
+    renderTables();
+    renderCharts(allRows);
     st.textContent='✓ Conectado';st.className='status-bar status-ok';
     document.getElementById('connectPanel').style.display='none';
   }catch(e){
@@ -242,40 +264,8 @@ async function loadData(){
     st.textContent='Error';st.className='status-bar status-err';
   }
 }
- 
-function getName(r, level){
-  if(level==='campaign') return r.campaign?.name||'—';
-  if(level==='adset') return r.adGroup?.name||'—';
-  return r.adGroupAd?.ad?.name||r.adGroupAd?.ad?.id||'—';
-}
-function getStatus(r, level){
-  if(level==='campaign') return r.campaign?.status||'—';
-  if(level==='adset') return r.adGroup?.status||'—';
-  return r.adGroupAd?.status||'—';
-}
- 
-function renderRow(r, level){
-  const m = r.metrics||{};
-  const spend = Number(m.costMicros||0)/1e6;
-  const imp = Number(m.impressions||0);
-  const clk = Number(m.clicks||0);
-  const conv = Number(m.conversions||0);
-  const ctr = imp?(clk/imp):0;
-  const cpp = conv?(spend/conv):0;
-  const status = getStatus(r,level);
-  const statusLabel = status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
-  const name = getName(r,level);
-  return `<tr>
-    <td title="${name}">${name}</td>
-    <td><span class="badge ${status}">${statusLabel}</span></td>
-    <td>${curr(spend)}</td>
-    <td>${pct(ctr)}</td>
-    <td>${conv.toFixed(1)}</td>
-    <td>${cpp?curr(cpp):'—'}</td>
-  </tr>`;
-}
- 
-function renderData(rows, level){
+
+function renderKPIs(rows){
   let ts=0,ti=0,tc=0,tv=0;
   rows.forEach(r=>{
     const m=r.metrics||{};
@@ -292,48 +282,119 @@ function renderData(rows, level){
   document.getElementById('k-cpm').textContent=ti?curr(ts/ti*1000):'—';
   document.getElementById('k-conv').textContent=tv.toFixed(0);
   document.getElementById('k-cpp').textContent=tv?curr(ts/tv):'—';
- 
-  // Separar por tipo
-  const pmax = rows.filter(r => getCampaignType(getName(r,level)) === 'pmax');
-  const search = rows.filter(r => getCampaignType(getName(r,level)) === 'search');
-  const video = rows.filter(r => getCampaignType(getName(r,level)) === 'video');
-  const other = rows.filter(r => getCampaignType(getName(r,level)) === 'other');
- 
-  // Renderizar tablas
-  const pmaxTbody = document.getElementById('tablePmax');
-  pmaxTbody.innerHTML = pmax.length ? pmax.map(r=>renderRow(r,level)).join('') : '<tr><td colspan="6" class="empty">Sin campañas PMax en este período.</td></tr>';
- 
-  const searchTbody = document.getElementById('tableSearch');
-  searchTbody.innerHTML = search.length ? search.map(r=>renderRow(r,level)).join('') : '<tr><td colspan="6" class="empty">Sin campañas Search en este período.</td></tr>';
- 
-  const videoTbody = document.getElementById('tableVideo');
-  const videoAll = [...video, ...other];
-  videoTbody.innerHTML = videoAll.length ? videoAll.map(r=>renderRow(r,level)).join('') : '<tr><td colspan="6" class="empty">Sin campañas de Video en este período.</td></tr>';
- 
-  // Gráficos
+}
+
+function populateCountryFilters(rows){
+  const allCountries = new Set();
+  rows.forEach(r=>{
+    if(r.countries&&r.countries!=='—'){
+      r.countries.split(', ').forEach(c=>allCountries.add(c.trim()));
+    }
+  });
+  const sorted=[...allCountries].sort();
+  ['filterSearchCountry','filterPmaxCountry','filterVideoCountry'].forEach(id=>{
+    const sel=document.getElementById(id);
+    const current=sel.value;
+    sel.innerHTML='<option value="">Todos los países</option>';
+    sorted.forEach(c=>{
+      const opt=document.createElement('option');
+      opt.value=c;opt.textContent=c;
+      sel.appendChild(opt);
+    });
+    sel.value=current;
+  });
+}
+
+function filterRows(rows, campFilter, countryFilter){
+  return rows.filter(r=>{
+    const name=getName(r).toLowerCase();
+    const countries=r.countries||'—';
+    const matchCamp=!campFilter||name.includes(campFilter.toLowerCase());
+    const matchCountry=!countryFilter||countries.includes(countryFilter);
+    return matchCamp&&matchCountry;
+  });
+}
+
+function renderRow(r, isVideo){
+  const m=r.metrics||{};
+  const spend=Number(m.costMicros||0)/1e6;
+  const imp=Number(m.impressions||0);
+  const clk=Number(m.clicks||0);
+  const conv=Number(m.conversions||0);
+  const ctr=imp?(clk/imp):0;
+  const cpm=imp?((spend/imp)*1000):0;
+  const cpp=conv?(spend/conv):0;
+  const status=getStatus(r);
+  const statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
+  const name=getName(r);
+  const countries=r.countries||'—';
+  if(isVideo){
+    return `<tr>
+      <td title="${name}">${name}</td>
+      <td><span class="badge ${status}">${statusLabel}</span></td>
+      <td>${countries}</td>
+      <td>${curr(spend)}</td>
+      <td>${pct(ctr)}</td>
+      <td>${curr(cpm)}</td>
+      <td>${conv.toFixed(1)}</td>
+      <td>${cpp?curr(cpp):'—'}</td>
+    </tr>`;
+  }
+  return `<tr>
+    <td title="${name}">${name}</td>
+    <td><span class="badge ${status}">${statusLabel}</span></td>
+    <td>${countries}</td>
+    <td>${curr(spend)}</td>
+    <td>${pct(ctr)}</td>
+    <td>${conv.toFixed(1)}</td>
+    <td>${cpp?curr(cpp):'—'}</td>
+  </tr>`;
+}
+
+function renderTables(){
+  const search=allRows.filter(r=>getCampaignType(getName(r))==='search');
+  const pmax=allRows.filter(r=>getCampaignType(getName(r))==='pmax');
+  const video=allRows.filter(r=>['video','other'].includes(getCampaignType(getName(r))));
+
+  const fSC=document.getElementById('filterSearchCampaign').value;
+  const fSCo=document.getElementById('filterSearchCountry').value;
+  const fPC=document.getElementById('filterPmaxCampaign').value;
+  const fPCo=document.getElementById('filterPmaxCountry').value;
+  const fVC=document.getElementById('filterVideoCampaign').value;
+  const fVCo=document.getElementById('filterVideoCountry').value;
+
+  const fSearch=filterRows(search,fSC,fSCo);
+  const fPmax=filterRows(pmax,fPC,fPCo);
+  const fVideo=filterRows(video,fVC,fVCo);
+
+  document.getElementById('tableSearch').innerHTML=fSearch.length
+    ?fSearch.map(r=>renderRow(r,false)).join('')
+    :'<tr><td colspan="7" class="center">Sin resultados.</td></tr>';
+
+  document.getElementById('tablePmax').innerHTML=fPmax.length
+    ?fPmax.map(r=>renderRow(r,false)).join('')
+    :'<tr><td colspan="7" class="center">Sin resultados.</td></tr>';
+
+  document.getElementById('tableVideo').innerHTML=fVideo.length
+    ?fVideo.map(r=>renderRow(r,true)).join('')
+    :'<tr><td colspan="8" class="center">Sin resultados.</td></tr>';
+}
+
+function renderCharts(rows){
   const top8s=[...rows].sort((a,b)=>Number(b.metrics.costMicros)-Number(a.metrics.costMicros)).slice(0,8);
   const top8c=[...rows].sort((a,b)=>Number(b.metrics.conversions)-Number(a.metrics.conversions)).slice(0,8);
- 
-  if(chartSpend) chartSpend.destroy();
-  if(chartConv) chartConv.destroy();
- 
+  if(chartSpend)chartSpend.destroy();
+  if(chartConv)chartConv.destroy();
   chartSpend=new Chart(document.getElementById('chartSpend'),{
     type:'bar',
-    data:{labels:top8s.map(r=>shortName(getName(r,level))),datasets:[{data:top8s.map(r=>Number(r.metrics.costMicros)/1e6),backgroundColor:'rgba(83,74,183,0.7)',borderRadius:3,borderSkipped:false}]},
+    data:{labels:top8s.map(r=>shortName(getName(r))),datasets:[{data:top8s.map(r=>Number(r.metrics.costMicros)/1e6),backgroundColor:'rgba(83,74,183,0.7)',borderRadius:3,borderSkipped:false}]},
     options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>'$'+Number(v.raw).toLocaleString('es-AR',{minimumFractionDigits:2})}}},scales:{x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10}}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
   });
   chartConv=new Chart(document.getElementById('chartConv'),{
     type:'bar',
-    data:{labels:top8c.map(r=>shortName(getName(r,level))),datasets:[{data:top8c.map(r=>Number(r.metrics.conversions)),backgroundColor:'rgba(29,158,117,0.7)',borderRadius:3,borderSkipped:false}]},
+    data:{labels:top8c.map(r=>shortName(getName(r))),datasets:[{data:top8c.map(r=>Number(r.metrics.conversions)),backgroundColor:'rgba(29,158,117,0.7)',borderRadius:3,borderSkipped:false}]},
     options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>Number(v.raw).toFixed(1)+' conv.'}}},scales:{x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10}}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
   });
-}
- 
-function switchTab(el,level){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('levelSel').value=level;
-  if(CUSTOMER_ID) loadData();
 }
 </script>
 </body>
