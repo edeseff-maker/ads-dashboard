@@ -4,6 +4,26 @@ const url = require('url');
 
 const PORT = process.env.PORT || 3000;
 
+function fetchUrl(targetUrl, callback) {
+  const parsed = url.parse(targetUrl);
+  const options = {
+    hostname: parsed.hostname,
+    path: parsed.path,
+    method: 'GET',
+    headers: { 'User-Agent': 'Mozilla/5.0' }
+  };
+
+  https.get(options, (res) => {
+    if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+      fetchUrl(res.headers.location, callback);
+      return;
+    }
+    let data = '';
+    res.on('data', chunk => data += chunk);
+    res.on('end', () => callback(null, data));
+  }).on('error', (e) => callback(e, null));
+}
+
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -24,18 +44,16 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const PROXY_URL = `https://script.google.com/macros/s/AKfycbxcowU_GWpXJX-_PN5dz0ERQ137w2P9D5JTV6NDZstUXLz2LDqoH0jmR3kZA044ak8/exec?customer_id=${customer_id}&level=${level||'campaign'}&since=${since}&until=${until}`;
+  const APPS_SCRIPT = `https://script.google.com/macros/s/AKfycbxcowU_GWpXJX-_PN5dz0ERQ137w2P9D5JTV6NDZstUXLz2LDqoH0jmR3kZA044ak8/exec?customer_id=${customer_id}&level=${level||'campaign'}&since=${since}&until=${until}`;
 
-  https.get(PROXY_URL, (proxyRes) => {
-    let data = '';
-    proxyRes.on('data', chunk => data += chunk);
-    proxyRes.on('end', () => {
-      res.writeHead(200, {'Content-Type': 'application/json'});
-      res.end(data);
-    });
-  }).on('error', (e) => {
-    res.writeHead(500, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify({ error: e.message }));
+  fetchUrl(APPS_SCRIPT, (err, data) => {
+    if (err) {
+      res.writeHead(500, {'Content-Type': 'application/json'});
+      res.end(JSON.stringify({ error: err.message }));
+      return;
+    }
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(data);
   });
 });
 
