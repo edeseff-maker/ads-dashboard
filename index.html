@@ -146,7 +146,7 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
   <h3>Conectar cuenta de Google Ads</h3>
   <p>Ingresá el Customer ID de la cuenta que querés ver.</p>
   <div class="input-row">
-    <input id="customerInput" type="text" placeholder="Customer ID (ej: 502-810-7265)"/>
+    <input id="customerInput" type="text" value="502-810-7265" placeholder="Customer ID"/>
     <button class="btn btn-connect" onclick="connectAds()">Conectar</button>
   </div>
   <div class="err" id="errMsg"></div>
@@ -264,7 +264,7 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 <script>
 const PROXY='https://ads-dashboard-production-d61d.up.railway.app';
 const APPS_SCRIPT='https://script.google.com/macros/s/AKfycbxcowU_GWpXJX-_PN5dz0ERQ137w2P9D5JTV6NDZstUXLz2LDqoH0jmR3kZA044ak8/exec';
-let CUSTOMER_ID='',allRows=[],allGeoRows=[],currentLevel='campaign';
+let CUSTOMER_ID='5028107265',allRows=[],allGeoRows=[],currentLevel='campaign';
 const expandedCamp={};// track expanded campaigns in page 2
 
 const FACULTADES=[
