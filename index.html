@@ -4,75 +4,40 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Universidad de Palermo - Reporte de Performance</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root{
-  --up-navy:#003366;
-  --up-gold:#FFB800;
-  --up-light:#E8EFF7;
-  --up-text:#1a1a2e;
-  --up-gray:#6b7280;
-  --up-border:#d1d9e6;
-  --up-bg:#f0f4f8;
-  --up-white:#ffffff;
-  --up-success:#16a34a;
-  --up-success-bg:#dcfce7;
-  --up-warning:#b45309;
-  --up-warning-bg:#fef3c7;
+  --up-navy:#003366;--up-gold:#FFB800;--up-light:#E8EFF7;--up-text:#1a1a2e;
+  --up-gray:#6b7280;--up-border:#d1d9e6;--up-bg:#f0f4f8;--up-white:#ffffff;
+  --up-success:#16a34a;--up-success-bg:#dcfce7;--up-warning:#b45309;--up-warning-bg:#fef3c7;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--up-bg);color:var(--up-text);padding:0}
-
-/* Header */
 .header{background:var(--up-navy);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.header-title{color:var(--up-white)}
-.header-title h1{font-size:18px;font-weight:600;letter-spacing:.01em}
+.header-title h1{color:var(--up-white);font-size:18px;font-weight:600}
 .header-title p{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px}
-.header-logo{height:40px;object-fit:contain;}
-
+.header-logo{height:40px;object-fit:contain}
 .content{padding:1.5rem 2rem}
-
-/* Connect panel */
-.connect-panel{background:var(--up-white);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid var(--up-gold)}
-.connect-panel h3{font-size:15px;font-weight:600;margin-bottom:.25rem;color:var(--up-navy)}
-.connect-panel p{font-size:13px;color:var(--up-gray);margin-bottom:.75rem}
-.input-row{display:flex;gap:8px;flex-wrap:wrap}
-.input-row input{flex:1;min-width:200px;padding:8px 12px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-white);color:var(--up-text);font-size:13px}
-.input-row input:focus{outline:none;border-color:var(--up-navy)}
-.err{font-size:12px;margin-top:6px;color:#dc2626}
-.err a{color:var(--up-navy)}
-.info{font-size:12px;color:var(--up-gray);margin-top:6px}
-
-/* Config bar */
 .config-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:1.25rem;padding:.85rem 1.25rem;background:var(--up-white);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .config-bar label{font-size:13px;color:var(--up-gray);font-weight:500}
 .config-bar input[type=date]{font-size:13px;padding:5px 8px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-white);color:var(--up-text)}
 .btn{padding:7px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
 .btn-primary{background:var(--up-navy);color:var(--up-white)}
 .btn-primary:hover{background:#002244}
-.btn-connect{background:var(--up-gold);color:var(--up-navy)}
-.btn-connect:hover{background:#e6a600}
-
-/* Status */
 .status-bar{font-size:12px;color:var(--up-gray)}
 .status-ok{color:var(--up-success);font-weight:600}
 .status-err{color:#dc2626;font-weight:600}
 .status-warn{color:var(--up-warning);font-weight:600}
-
-/* KPIs */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.5rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:1.5rem}
 .kpi{background:var(--up-white);border-radius:12px;padding:.9rem 1.1rem;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:3px solid var(--up-gold)}
 .kpi-label{font-size:11px;color:var(--up-gray);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 .kpi-value{font-size:22px;font-weight:700;color:var(--up-navy)}
-
-/* Page tabs */
+.kpi-detail{font-size:11px;color:var(--up-gray);margin-top:4px}
+.kpi-detail span{margin-right:6px}
 .page-tabs{display:flex;gap:0;margin-bottom:1.5rem;background:var(--up-white);border-radius:12px;padding:4px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .page-tab{flex:1;padding:10px 16px;font-size:13px;cursor:pointer;color:var(--up-gray);border-radius:9px;text-align:center;font-weight:500;transition:all .15s}
 .page-tab.active{background:var(--up-navy);color:var(--up-white);font-weight:600}
 .page{display:none}
 .page.active{display:block}
-
-/* Section */
 .section{background:var(--up-white);border-radius:12px;padding:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:1.25rem}
 .section-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2px solid var(--up-light)}
 .section-header h2{font-size:15px;font-weight:700;color:var(--up-navy)}
@@ -80,17 +45,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .search-badge{background:#dbeafe;color:#1e3a8a}
 .pmax-badge{background:#ede9fe;color:#4c1d95}
 .video-badge{background:#fce7f3;color:#831843}
-
-/* Filters */
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem}
 .filters input,.filters select{font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-bg);color:var(--up-text);min-width:160px}
-
-/* Level tabs */
 .level-tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:2px solid var(--up-border)}
 .level-tab{padding:8px 16px;font-size:13px;cursor:pointer;color:var(--up-gray);border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:500;transition:all .15s}
 .level-tab.active{color:var(--up-navy);border-bottom-color:var(--up-gold);font-weight:700}
-
-/* Tables */
 .table-wrap{overflow-x:auto}
 .pivot-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--up-border)}
 table{width:100%;border-collapse:collapse;font-size:12px}
@@ -100,8 +59,6 @@ tbody td{padding:8px 12px;border-bottom:1px solid var(--up-light);color:var(--up
 tbody td:first-child{text-align:left}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:var(--up-light)}
-
-/* Pivot rows */
 tbody tr.faculty-row{cursor:pointer}
 tbody tr.faculty-row td{font-weight:600;color:var(--up-navy)}
 tbody tr.faculty-row:hover td{background:#e8eef7}
@@ -110,31 +67,23 @@ tbody tr.camp-row td:first-child{padding-left:2.5rem}
 tbody tr.camp-row:hover td{background:var(--up-light)}
 tbody tr.subtotal-row td{font-weight:700;background:var(--up-light);color:var(--up-navy);border-top:2px solid var(--up-border)}
 tbody tr.total-row td{font-weight:700;background:var(--up-navy);color:var(--up-white)}
-tbody tr.total-row:hover td{background:#002244}
-
-/* Campaign table rows */
-tbody tr.camp-header-row td{font-weight:600;background:#eef2ff;color:var(--up-navy)}
+tbody tr.camp-header-row td{font-weight:600;background:#eef2ff;color:var(--up-navy);cursor:pointer}
 tbody tr.geo-detail-row td{font-size:11px;color:#444;background:#fafafa}
 tbody tr.geo-detail-row td:first-child{padding-left:2.5rem}
 tbody tr.geo-detail-row:hover td{background:var(--up-light)}
-
 .expand-icon{margin-right:6px;display:inline-block;transition:transform .2s;font-size:10px;color:var(--up-gold)}
 .expanded .expand-icon{transform:rotate(90deg)}
-
 .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
 .ENABLED{background:var(--up-success-bg);color:var(--up-success)}
 .PAUSED{background:var(--up-warning-bg);color:var(--up-warning)}
 .REMOVED{background:#f3f4f6;color:#6b7280}
-
 .center{text-align:center!important;padding:2rem;color:var(--up-gray)}
-
-.cell-best{background:#d1fae5!important;font-weight:700;color:#065f46}
-.cell-worst{background:#fee2e2!important;font-weight:700;color:#991b1b}
+.cell-best{background:#d1fae5!important;font-weight:700;color:#065f46!important}
+.cell-low{background:#fee2e2!important;font-weight:700;color:#991b1b!important}
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
   <div class="header-title">
     <h1>Universidad de Palermo — Reporte de Performance</h1>
@@ -145,21 +94,10 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 
 <div class="content">
 
-<div class="connect-panel" id="connectPanel" style="display:none">
-  <h3>Conectar cuenta de Google Ads</h3>
-  <p>Ingresá el Customer ID de la cuenta que querés ver.</p>
-  <div class="input-row">
-    <input id="customerInput" type="text" value="502-810-7265" placeholder="Customer ID"/>
-    <button class="btn btn-connect" onclick="connectAds()">Conectar</button>
-  </div>
-  <div class="err" id="errMsg"></div>
-  <div class="info">Los datos se obtienen via tu proxy de Apps Script.</div>
-</div>
-
 <div class="config-bar">
   <label>Desde:</label><input type="date" id="dateFrom"/>
   <label>Hasta:</label><input type="date" id="dateTo"/>
-  <button class="btn btn-primary" onclick="loadData();reloadMetaIfActive()">Actualizar</button>
+  <button class="btn btn-primary" onclick="loadAll()">Actualizar</button>
   <span class="status-bar" id="connStatus"></span>
 </div>
 
@@ -167,25 +105,25 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
   <div class="kpi">
     <div class="kpi-label">Inversión total</div>
     <div class="kpi-value" id="k-spend">—</div>
-    <div style="font-size:11px;color:var(--up-gray);margin-top:4px">
-      <span style="color:#1e40af">●</span> GAds: <span id="k-spend-g">—</span> &nbsp;
-      <span style="color:#1565c0">●</span> Meta: <span id="k-spend-m">—</span>
+    <div class="kpi-detail">
+      <span style="color:#1e40af">●</span> GAds: <span id="k-spend-g">—</span>
+      <span style="color:#0d47a1">●</span> Meta: <span id="k-spend-m">—</span>
     </div>
   </div>
   <div class="kpi">
     <div class="kpi-label">Leads / Conv.</div>
     <div class="kpi-value" id="k-conv">—</div>
-    <div style="font-size:11px;color:var(--up-gray);margin-top:4px">
-      <span style="color:#1e40af">●</span> GAds: <span id="k-conv-g">—</span> &nbsp;
-      <span style="color:#1565c0">●</span> Meta: <span id="k-conv-m">—</span>
+    <div class="kpi-detail">
+      <span style="color:#1e40af">●</span> GAds: <span id="k-conv-g">—</span>
+      <span style="color:#0d47a1">●</span> Meta: <span id="k-conv-m">—</span>
     </div>
   </div>
   <div class="kpi">
     <div class="kpi-label">Costo/lead</div>
     <div class="kpi-value" id="k-cpp">—</div>
-    <div style="font-size:11px;color:var(--up-gray);margin-top:4px">
-      <span style="color:#1e40af">●</span> GAds: <span id="k-cpp-g">—</span> &nbsp;
-      <span style="color:#1565c0">●</span> Meta: <span id="k-cpp-m">—</span>
+    <div class="kpi-detail">
+      <span style="color:#1e40af">●</span> GAds: <span id="k-cpp-g">—</span>
+      <span style="color:#0d47a1">●</span> Meta: <span id="k-cpp-m">—</span>
     </div>
   </div>
   <div class="kpi"><div class="kpi-label">Clics</div><div class="kpi-value" id="k-clicks">—</div></div>
@@ -194,141 +132,96 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
   <div class="kpi"><div class="kpi-label">CPM prom.</div><div class="kpi-value" id="k-cpm">—</div></div>
 </div>
 
-<!-- Page tabs -->
 <div class="page-tabs">
   <div class="page-tab active" onclick="switchPage(this,'pageResumen')">Google Ads | Performance por Facultad</div>
   <div class="page-tab" onclick="switchPage(this,'pageCampanas')">Google Ads | Performance por Campaña</div>
-  <div class="page-tab" onclick="switchPage(this,'pageMeta');loadMetaData()">Meta Ads | Performance por Campaña</div>
+  <div class="page-tab" onclick="switchPage(this,'pageMeta')">Meta Ads | Performance por Campaña</div>
 </div>
 
-<!-- PAGE 1 -->
+<!-- PAGE 1: Google Ads Resumen -->
 <div class="page active" id="pageResumen">
   <div class="section">
     <div class="section-header"><h2>Inversión por Facultad</h2></div>
-    <div class="pivot-table-wrap"><table id="tableInversion"><thead><tr id="headInversion"></tr></thead><tbody id="bodyInversion"></tbody></table></div>
+    <div class="pivot-table-wrap"><table><thead><tr id="headInversion"></tr></thead><tbody id="bodyInversion"></tbody></table></div>
   </div>
   <div class="section">
     <div class="section-header"><h2>Leads por Facultad</h2></div>
-    <div class="pivot-table-wrap"><table id="tableLeads"><thead><tr id="headLeads"></tr></thead><tbody id="bodyLeads"></tbody></table></div>
+    <div class="pivot-table-wrap"><table><thead><tr id="headLeads"></tr></thead><tbody id="bodyLeads"></tbody></table></div>
   </div>
   <div class="section">
     <div class="section-header"><h2>Costo por Lead por Facultad</h2></div>
-    <div class="pivot-table-wrap"><table id="tableCPL"><thead><tr id="headCPL"></tr></thead><tbody id="bodyCPL"></tbody></table></div>
+    <div class="pivot-table-wrap"><table><thead><tr id="headCPL"></tr></thead><tbody id="bodyCPL"></tbody></table></div>
   </div>
 </div>
 
-<!-- PAGE 2 -->
+<!-- PAGE 2: Google Ads Campañas -->
 <div class="page" id="pageCampanas">
-
   <div class="level-tabs">
     <div class="level-tab active" onclick="switchLevel(this,'campaign')">Campañas</div>
     <div class="level-tab" onclick="switchLevel(this,'adset')">Conjuntos de anuncios</div>
     <div class="level-tab" onclick="switchLevel(this,'ad')">Anuncios</div>
   </div>
-
-  <!-- Search -->
   <div class="section">
     <div class="section-header"><h2>Search</h2><span class="type-badge search-badge">Search</span></div>
     <div class="filters">
       <input type="text" id="filterSearchCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
       <select id="filterSearchCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th style="text-align:left;width:35%">Nombre</th>
-          <th style="text-align:left">Estado</th>
-          <th>País</th><th>Gasto</th><th>CTR</th><th>Conversiones</th><th>Costo/conv.</th>
-        </tr></thead>
-        <tbody id="tableSearch"><tr><td colspan="7" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
-      </table>
-    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="text-align:left;width:35%">Nombre</th><th style="text-align:left">Estado</th><th>País</th><th>Gasto</th><th>CTR</th><th>Conv.</th><th>Costo/conv.</th></tr></thead>
+      <tbody id="tableSearch"><tr><td colspan="7" class="center">Cargando...</td></tr></tbody>
+    </table></div>
   </div>
-
-  <!-- PMax -->
   <div class="section">
     <div class="section-header"><h2>Performance Max</h2><span class="type-badge pmax-badge">PMax</span></div>
     <div class="filters">
       <input type="text" id="filterPmaxCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
       <select id="filterPmaxCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th style="text-align:left;width:35%">Nombre</th>
-          <th style="text-align:left">Estado</th>
-          <th>País</th><th>Gasto</th><th>CTR</th><th>Conversiones</th><th>Costo/conv.</th>
-        </tr></thead>
-        <tbody id="tablePmax"><tr><td colspan="7" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
-      </table>
-    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="text-align:left;width:35%">Nombre</th><th style="text-align:left">Estado</th><th>País</th><th>Gasto</th><th>CTR</th><th>Conv.</th><th>Costo/conv.</th></tr></thead>
+      <tbody id="tablePmax"><tr><td colspan="7" class="center">Cargando...</td></tr></tbody>
+    </table></div>
   </div>
-
-  <!-- Video -->
   <div class="section">
     <div class="section-header"><h2>Video</h2><span class="type-badge video-badge">Video</span></div>
     <div class="filters">
       <input type="text" id="filterVideoCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
       <select id="filterVideoCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th style="text-align:left;width:35%">Nombre</th>
-          <th style="text-align:left">Estado</th>
-          <th>País</th><th>Gasto</th><th>CTR</th><th>CPM</th><th>Conversiones</th><th>Costo/conv.</th>
-        </tr></thead>
-        <tbody id="tableVideo"><tr><td colspan="8" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
-      </table>
-    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="text-align:left;width:35%">Nombre</th><th style="text-align:left">Estado</th><th>País</th><th>Gasto</th><th>CTR</th><th>CPM</th><th>Conv.</th><th>Costo/conv.</th></tr></thead>
+      <tbody id="tableVideo"><tr><td colspan="8" class="center">Cargando...</td></tr></tbody>
+    </table></div>
   </div>
-
 </div>
 
 <!-- PAGE 3: Meta Ads -->
 <div class="page" id="pageMeta">
-
   <div class="section">
     <div class="section-header"><h2>Inversión por tipo de campaña</h2></div>
-    <div class="pivot-table-wrap"><table id="tableMetaInversion"><thead><tr id="headMetaInversion"></tr></thead><tbody id="bodyMetaInversion"></tbody></table></div>
+    <div class="pivot-table-wrap"><table><thead><tr id="headMetaInversion"></tr></thead><tbody id="bodyMetaInversion"></tbody></table></div>
   </div>
-
   <div class="section">
     <div class="section-header"><h2>Leads por tipo de campaña</h2></div>
-    <div class="pivot-table-wrap"><table id="tableMetaLeads"><thead><tr id="headMetaLeads"></tr></thead><tbody id="bodyMetaLeads"></tbody></table></div>
+    <div class="pivot-table-wrap"><table><thead><tr id="headMetaLeads"></tr></thead><tbody id="bodyMetaLeads"></tbody></table></div>
   </div>
-
   <div class="section">
     <div class="section-header"><h2>Costo por Lead por tipo de campaña</h2></div>
-    <div class="pivot-table-wrap"><table id="tableMetaCPL"><thead><tr id="headMetaCPL"></tr></thead><tbody id="bodyMetaCPL"></tbody></table></div>
+    <div class="pivot-table-wrap"><table><thead><tr id="headMetaCPL"></tr></thead><tbody id="bodyMetaCPL"></tbody></table></div>
   </div>
-
 </div>
 
 </div><!-- end content -->
 
 <script>
 const PROXY='https://ads-dashboard-production-d61d.up.railway.app';
-const APPS_SCRIPT='https://script.google.com/macros/s/AKfycbxcowU_GWpXJX-_PN5dz0ERQ137w2P9D5JTV6NDZstUXLz2LDqoH0jmR3kZA044ak8/exec';
-let CUSTOMER_ID='5028107265',allRows=[],allGeoRows=[],currentLevel='campaign';
-const expandedCamp={};// track expanded campaigns in page 2
+const CUSTOMER_ID='5028107265';
+let allRows=[],allGeoRows=[],metaGeoData=[];
+let currentLevel='campaign';
+const expandedCamp={};
 
-const FACULTADES=[
-  {key:'ingenieria',label:'Ingeniería',match:['ingeniería','ingenieria']},
-  {key:'derecho',label:'Derecho',match:['derecho']},
-  {key:'sociales',label:'Ciencias Sociales',match:['ciencias sociales','sociales']},
-  {key:'diseno',label:'Diseño y Comunicación',match:['diseño','diseno','comunicación','comunicacion']},
-  {key:'mba',label:'MBA',match:['mba']},
-  {key:'negocios',label:'Facultad de Negocios',match:['facultad de negocios']},
-  {key:'online',label:'Carreras Online',match:['carreras online']},
-  {key:'distancia',label:'Carreras a Distancia',match:['distancia']},
-  {key:'ia',label:'Maestría en IA',match:['maestría en ia','maestria en ia',' ia ','| ia']},
-];
-const GRUPOS=[
-  {label:'FACULTADES',keys:['ingenieria','derecho','sociales','diseno','mba','negocios','ia']},
-  {label:'GENÉRICAS',keys:['online','distancia']},
-];
-
+// Fechas por defecto
 (function(){
   const to=new Date(),from=new Date();
   from.setDate(from.getDate()-29);
@@ -336,10 +229,33 @@ const GRUPOS=[
   document.getElementById('dateFrom').value=from.toISOString().split('T')[0];
 })();
 
+// Helpers
 function curr(n){return'$'+Number(n||0).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function num(n){return Math.round(Number(n||0)).toLocaleString('es-AR');}
 function pct(n){return(Number(n||0)*100).toFixed(2)+'%';}
 function shortName(n,len=45){return n.length>len?n.substring(0,len-2)+'…':n;}
+
+// Mapeos
+const FACULTADES=[
+  {key:'ingenieria',label:'Ingeniería',match:['ingeniería','ingenieria']},
+  {key:'derecho',label:'Derecho',match:['derecho']},
+  {key:'sociales',label:'Ciencias Sociales',match:['ciencias sociales']},
+  {key:'diseno',label:'Diseño y Comunicación',match:['diseño','diseno']},
+  {key:'mba',label:'MBA',match:['mba']},
+  {key:'negocios',label:'Facultad de Negocios',match:['facultad de negocios']},
+  {key:'online',label:'Carreras Online',match:['carreras online']},
+  {key:'distancia',label:'Carreras a Distancia',match:['distancia']},
+  {key:'ia',label:'Maestría en IA',match:['maestría en ia','maestria en ia']},
+];
+const GRUPOS=[
+  {label:'FACULTADES',keys:['ingenieria','derecho','sociales','diseno','mba','negocios','ia']},
+  {label:'GENÉRICAS',keys:['online','distancia']},
+];
+const META_GRUPOS=[
+  {key:'leads',label:'Leads (Meta)',match:['leads']},
+  {key:'trafico',label:'Tráfico',match:['tráfico','trafico']},
+  {key:'conversaciones',label:'Conversaciones (WhatsApp)',match:['conversaciones','whatsapp']},
+];
 
 function getFacultad(name){
   const n=name.toLowerCase();
@@ -353,72 +269,139 @@ function getCampaignType(name){
   if(n.includes('VIDEO')||n.includes('YOUTUBE')||n.includes('YT'))return'video';
   return'other';
 }
+function getMetaTipo(name){
+  const n=name.toLowerCase();
+  for(const g of META_GRUPOS){if(g.match.some(m=>n.includes(m)))return g.key;}
+  return'otros';
+}
 function getName(r){return r.campaign?.name||r.adGroup?.name||'—';}
 function getStatus(r){return r.campaign?.status||r.adGroup?.status||'—';}
-
-async function connectAds(){
-  const c=document.getElementById('customerInput').value.trim().replace(/-/g,'');
-  if(!c){console.log('Sin customer ID');return;}
-  CUSTOMER_ID=c;document.getElementById('errMsg').textContent='';await loadData();
+function getMetaLeads(actions){
+  if(!actions)return 0;
+  const a=actions.find(x=>x.action_type==='lead'||x.action_type==='offsite_conversion.fb_pixel_lead');
+  return a?Number(a.value):0;
 }
 
-async function loadData(){
-  if(!CUSTOMER_ID){console.log('Sin customer ID');return;}
+// --- CARGA DE DATOS ---
+async function loadAll(){
   const since=document.getElementById('dateFrom').value;
   const until=document.getElementById('dateTo').value;
   const st=document.getElementById('connStatus');
   st.textContent='Cargando...';st.className='status-bar';
+  await Promise.all([loadGads(since,until), loadMeta(since,until)]);
+  st.textContent='✓ Conectado';st.className='status-bar status-ok';
+}
+
+async function loadGads(since,until){
   try{
     const r=await fetch(`${PROXY}?customer_id=${CUSTOMER_ID}&level=${currentLevel}&since=${since}&until=${until}`);
     const text=await r.text();
     if(text.includes('Clic aquí')||text.includes('authoriz')){
-      const authUrl=`${APPS_SCRIPT}?customer_id=${CUSTOMER_ID}&level=${currentLevel}&since=${since}&until=${until}`;
-      console.error('<span>Necesitás autorizar. <a href="${authUrl}" target="_blank">Clic aquí</a> y volvé a intentar.</span>');
-      st.textContent='Sin autorización';st.className='status-bar status-warn';return;
+      document.getElementById('connStatus').textContent='Necesitás autorizar Google Ads';
+      document.getElementById('connStatus').className='status-bar status-warn';
+      return;
     }
     const d=JSON.parse(text);
-    if(d.error){console.error('<span>Error: ${d.error}</span>');st.textContent='Error';st.className='status-bar status-err';return;}
+    if(d.error){document.getElementById('connStatus').textContent='Error GAds: '+d.error;return;}
     allRows=d.results||[];allGeoRows=d.geoRows||[];
-    renderKPIs(allRows);populateCountryFilters();renderPivotTables();renderCampaignTables();
-    st.textContent='✓ Conectado';st.className='status-bar status-ok';
-    document.getElementById('connectPanel').style.display='none';
+    renderGadsKPIs();
+    populateCountryFilters();
+    renderPivotTables();
+    renderCampaignTables();
   }catch(e){
-    console.error('<span>Error: ${e.message}</span>');st.textContent='Error';st.className='status-bar status-err';
+    document.getElementById('connStatus').textContent='Error GAds: '+e.message;
+    document.getElementById('connStatus').className='status-bar status-err';
   }
 }
 
-// renderKPIs moved to combined version;ts+=Number(m.costMicros||0)/1e6;ti+=Number(m.impressions||0);tc+=Number(m.clicks||0);tv+=Number(m.conversions||0);});
-  document.getElementById('k-spend').textContent=curr(ts);
-  
-  document.getElementById('k-clicks').textContent=num(tc);
-  document.getElementById('k-ctr').textContent=ti?pct(tc/ti):'—';
-  document.getElementById('k-cpc').textContent=tc?curr(ts/tc):'—';
-  document.getElementById('k-cpm').textContent=ti?curr(ts/ti*1000):'—';
-  document.getElementById('k-conv').textContent=tv.toFixed(0);
-  document.getElementById('k-cpp').textContent=tv?curr(ts/tv):'—';
+async function loadMeta(since,until){
+  try{
+    const r=await fetch(`${PROXY}/meta-geo?level=campaign&since=${since}&until=${until}`);
+    const d=await r.json();
+    metaGeoData=d.data||[];
+    renderMetaKPIs();
+    renderMetaTables();
+  }catch(e){
+    console.error('Error Meta:',e);
+  }
 }
 
-// --- PIVOT TABLES ---
+// --- KPIs ---
+let gSpend=0,gConv=0,gClicks=0,gImp=0;
+let mSpend=0,mLeads=0;
+
+function renderGadsKPIs(){
+  gSpend=0;gConv=0;gClicks=0;gImp=0;
+  allRows.forEach(r=>{const m=r.metrics||{};gSpend+=Number(m.costMicros||0)/1e6;gImp+=Number(m.impressions||0);gClicks+=Number(m.clicks||0);gConv+=Number(m.conversions||0);});
+  updateKPIs();
+}
+function renderMetaKPIs(){
+  mSpend=0;mLeads=0;
+  metaGeoData.forEach(r=>{mSpend+=Number(r.spend||0);mLeads+=getMetaLeads(r.actions);});
+  updateKPIs();
+}
+function updateKPIs(){
+  const ts=gSpend+mSpend,tv=gConv+mLeads;
+  document.getElementById('k-spend').textContent=curr(ts);
+  document.getElementById('k-conv').textContent=tv.toFixed(0);
+  document.getElementById('k-cpp').textContent=tv>0?curr(ts/tv):'—';
+  document.getElementById('k-clicks').textContent=num(gClicks);
+  document.getElementById('k-ctr').textContent=gImp?pct(gClicks/gImp):'—';
+  document.getElementById('k-cpc').textContent=gClicks?curr(gSpend/gClicks):'—';
+  document.getElementById('k-cpm').textContent=gImp?curr(gSpend/gImp*1000):'—';
+  document.getElementById('k-spend-g').textContent=curr(gSpend);
+  document.getElementById('k-spend-m').textContent=curr(mSpend);
+  document.getElementById('k-conv-g').textContent=gConv.toFixed(0);
+  document.getElementById('k-conv-m').textContent=mLeads.toFixed(0);
+  document.getElementById('k-cpp-g').textContent=gConv>0?curr(gSpend/gConv):'—';
+  document.getElementById('k-cpp-m').textContent=mLeads>0?curr(mSpend/mLeads):'—';
+}
+
+// --- HIGHLIGHT ---
+function highlightRows(tbodyId, metricType){
+  const tbody=document.getElementById(tbodyId);
+  if(!tbody)return;
+  tbody.querySelectorAll('tr.faculty-row, tr.camp-row').forEach(row=>{
+    const cells=Array.from(row.querySelectorAll('td')).slice(1,-1);
+    cells.forEach(td=>td.classList.remove('cell-best','cell-low'));
+    const vals=cells.map(td=>{
+      const t=td.textContent.replace(/[$.\s]/g,'').replace(',','.').replace('—','');
+      return t?parseFloat(t):null;
+    });
+    const positives=vals.filter(v=>v!==null&&v>0);
+    if(!positives.length)return;
+    const max=Math.max(...positives),min=Math.min(...positives);
+    cells.forEach((td,i)=>{
+      if(vals[i]===null||vals[i]===0)return;
+      if(metricType==='cpl'){
+        if(vals[i]===min)td.classList.add('cell-best');
+      } else {
+        if(vals[i]===max)td.classList.add('cell-best');
+      }
+    });
+  });
+}
+
+// --- PIVOT TABLES (Google Ads) ---
 function buildPivotData(){
   const countries=new Set();
   const data={};
   allGeoRows.forEach(g=>{
     const fKey=getFacultad(g.campaign.name);if(!fKey)return;
-    const country=g.country;countries.add(country);
-    const m=g.metrics||{};
-    const spend=Number(m.costMicros||0)/1e6;const conv=Number(m.conversions||0);
+    countries.add(g.country);
+    const spend=Number(g.metrics?.costMicros||0)/1e6;
+    const conv=Number(g.metrics?.conversions||0);
     if(!data[fKey])data[fKey]={};
     if(!data[fKey][g.campaign.resourceName])data[fKey][g.campaign.resourceName]={name:g.campaign.name,countries:{}};
-    if(!data[fKey][g.campaign.resourceName].countries[country])data[fKey][g.campaign.resourceName].countries[country]={spend:0,conv:0};
-    data[fKey][g.campaign.resourceName].countries[country].spend+=spend;
-    data[fKey][g.campaign.resourceName].countries[country].conv+=conv;
+    if(!data[fKey][g.campaign.resourceName].countries[g.country])data[fKey][g.campaign.resourceName].countries[g.country]={spend:0,conv:0};
+    data[fKey][g.campaign.resourceName].countries[g.country].spend+=spend;
+    data[fKey][g.campaign.resourceName].countries[g.country].conv+=conv;
   });
   allRows.forEach(r=>{
-    const campName=getName(r);const campRes=r.campaign?.resourceName||'';
+    const campName=getName(r),campRes=r.campaign?.resourceName||'';
     const fKey=getFacultad(campName);if(!fKey)return;
     if(allGeoRows.some(g=>g.campaign.resourceName===campRes))return;
-    const m=r.metrics||{};
-    const spend=Number(m.costMicros||0)/1e6;const conv=Number(m.conversions||0);
+    const spend=Number(r.metrics?.costMicros||0)/1e6,conv=Number(r.metrics?.conversions||0);
     const country=r.countries||'Argentina';countries.add(country);
     if(!data[fKey])data[fKey]={};
     if(!data[fKey][campRes])data[fKey][campRes]={name:campName,countries:{}};
@@ -431,94 +414,167 @@ function buildPivotData(){
 
 function renderPivotTables(){
   const{data,countries}=buildPivotData();
-  ['Inversion','Leads','CPL'].forEach(type=>{
+  [['Inversion','spend'],['Leads','conv'],['CPL','cpl']].forEach(([type,metric])=>{
     const head=document.getElementById(`head${type}`);
     const body=document.getElementById(`body${type}`);
     head.innerHTML='<th>Facultad</th>'+countries.map(c=>`<th>${c}</th>`).join('')+'<th>Total</th>';
     body.innerHTML='';
+    let allS={},allC={};countries.forEach(c=>{allS[c]=0;allC[c]=0;});
 
     GRUPOS.forEach(grupo=>{
-      let gSpend={},gConv={};countries.forEach(c=>{gSpend[c]=0;gConv[c]=0;});
-
+      let gS={},gC={};countries.forEach(c=>{gS[c]=0;gC[c]=0;});
       grupo.keys.forEach(fKey=>{
         const fDef=FACULTADES.find(f=>f.key===fKey);if(!fDef)return;
-        const fData=data[fKey]||{};const camps=Object.values(fData);if(!camps.length)return;
-        let fSpend={},fConv={};countries.forEach(c=>{fSpend[c]=0;fConv[c]=0;});
-        camps.forEach(camp=>{countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};fSpend[c]+=v.spend;fConv[c]+=v.conv;});});
-        countries.forEach(c=>{gSpend[c]+=fSpend[c];gConv[c]+=fConv[c];});
-
+        const camps=Object.values(data[fKey]||{});if(!camps.length)return;
+        let fS={},fC={};countries.forEach(c=>{fS[c]=0;fC[c]=0;});
+        camps.forEach(camp=>countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};fS[c]+=v.spend;fC[c]+=v.conv;}));
+        countries.forEach(c=>{gS[c]+=fS[c];gC[c]+=fC[c];allS[c]+=fS[c];allC[c]+=fC[c];});
+        const totS=countries.reduce((s,c)=>s+fS[c],0),totC=countries.reduce((s,c)=>s+fC[c],0);
+        let totCell=metric==='spend'?curr(totS):metric==='conv'?totC.toFixed(1):totC>0?curr(totS/totC):'—';
         const rowId=`fac_${type}_${fKey}`;
-        const tr=document.createElement('tr');
-        tr.className='faculty-row';tr.id=rowId;
-        tr.dataset.expanded='0';
-        tr.onclick=()=>togglePivotFacultad(fKey,type,camps,countries,rowId);
-
-        const totS=countries.reduce((s,c)=>s+fSpend[c],0);
-        const totC=countries.reduce((s,c)=>s+fConv[c],0);
-        let totalCell=type==='Inversion'?curr(totS):type==='Leads'?totC.toFixed(1):totC>0?curr(totS/totC):'—';
-
+        const tr=document.createElement('tr');tr.className='faculty-row';tr.id=rowId;tr.dataset.expanded='0';
+        tr.onclick=()=>togglePivotFac(fKey,type,metric,camps,countries,rowId);
         tr.innerHTML=`<td><span class="expand-icon">▶</span>${fDef.label}</td>`+
           countries.map(c=>{
-            if(type==='Inversion')return`<td>${fSpend[c]>0?curr(fSpend[c]):'—'}</td>`;
-            if(type==='Leads')return`<td>${fConv[c]>0?fConv[c].toFixed(1):'—'}</td>`;
-            return`<td>${fConv[c]>0?curr(fSpend[c]/fConv[c]):'—'}</td>`;
-          }).join('')+`<td>${totalCell}</td>`;
+            if(metric==='spend')return`<td>${fS[c]>0?curr(fS[c]):'—'}</td>`;
+            if(metric==='conv')return`<td>${fC[c]>0?fC[c].toFixed(1):'—'}</td>`;
+            return`<td>${fC[c]>0?curr(fS[c]/fC[c]):'—'}</td>`;
+          }).join('')+`<td>${totCell}</td>`;
         body.appendChild(tr);
       });
-
-      const stotS=countries.reduce((s,c)=>s+gSpend[c],0);
-      const stotC=countries.reduce((s,c)=>s+gConv[c],0);
-      let stotCell=type==='Inversion'?curr(stotS):type==='Leads'?stotC.toFixed(1):stotC>0?curr(stotS/stotC):'—';
+      const stS=countries.reduce((s,c)=>s+gS[c],0),stC=countries.reduce((s,c)=>s+gC[c],0);
+      let stCell=metric==='spend'?curr(stS):metric==='conv'?stC.toFixed(1):stC>0?curr(stS/stC):'—';
       const subTr=document.createElement('tr');subTr.className='subtotal-row';
-      subTr.innerHTML=`<td>TOTAL ${grupo.label}</td>`+
-        countries.map(c=>{
-          if(type==='Inversion')return`<td>${curr(gSpend[c])}</td>`;
-          if(type==='Leads')return`<td>${gConv[c].toFixed(1)}</td>`;
-          return`<td>${gConv[c]>0?curr(gSpend[c]/gConv[c]):'—'}</td>`;
-        }).join('')+`<td>${stotCell}</td>`;
+      subTr.innerHTML=`<td>TOTAL ${grupo.label}</td>`+countries.map(c=>{
+        if(metric==='spend')return`<td>${curr(gS[c])}</td>`;
+        if(metric==='conv')return`<td>${gC[c].toFixed(1)}</td>`;
+        return`<td>${gC[c]>0?curr(gS[c]/gC[c]):'—'}</td>`;
+      }).join('')+`<td>${stCell}</td>`;
       body.appendChild(subTr);
     });
 
-    let allS={},allC={};countries.forEach(c=>{allS[c]=0;allC[c]=0;});
-    FACULTADES.forEach(f=>{const fData=data[f.key]||{};Object.values(fData).forEach(camp=>{countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};allS[c]+=v.spend;allC[c]+=v.conv;});});});
-    const gtS=countries.reduce((s,c)=>s+allS[c],0);const gtC=countries.reduce((s,c)=>s+allC[c],0);
-    let gtCell=type==='Inversion'?curr(gtS):type==='Leads'?gtC.toFixed(1):gtC>0?curr(gtS/gtC):'—';
+    const gtS=countries.reduce((s,c)=>s+allS[c],0),gtC=countries.reduce((s,c)=>s+allC[c],0);
+    let gtCell=metric==='spend'?curr(gtS):metric==='conv'?gtC.toFixed(1):gtC>0?curr(gtS/gtC):'—';
+    const lbl=metric==='spend'?'TOTAL INVERSIÓN':metric==='conv'?'TOTAL LEADS':'TOTAL COSTO POR LEAD';
     const totalTr=document.createElement('tr');totalTr.className='total-row';
-    const totalLabel=type==='Inversion'?'TOTAL INVERSIÓN':type==='Leads'?'TOTAL LEADS':'TOTAL COSTO POR LEAD';
-    totalTr.innerHTML=`<td>${totalLabel}</td>`+
-      countries.map(c=>{
-        if(type==='Inversion')return`<td>${curr(allS[c])}</td>`;
-        if(type==='Leads')return`<td>${allC[c].toFixed(1)}</td>`;
-        return`<td>${allC[c]>0?curr(allS[c]/allC[c]):'—'}</td>`;
-      }).join('')+`<td>${gtCell}</td>`;
+    totalTr.innerHTML=`<td>${lbl}</td>`+countries.map(c=>{
+      if(metric==='spend')return`<td>${curr(allS[c])}</td>`;
+      if(metric==='conv')return`<td>${allC[c].toFixed(1)}</td>`;
+      return`<td>${allC[c]>0?curr(allS[c]/allC[c]):'—'}</td>`;
+    }).join('')+`<td>${gtCell}</td>`;
     body.appendChild(totalTr);
+    setTimeout(()=>highlightRows(`body${type}`,metric),50);
   });
 }
 
-function togglePivotFacultad(fKey,type,camps,countries,rowId){
+function togglePivotFac(fKey,type,metric,camps,countries,rowId){
   const row=document.getElementById(rowId);
   const isExp=row.dataset.expanded==='1';
   row.dataset.expanded=isExp?'0':'1';
   row.classList.toggle('expanded');
   document.querySelectorAll(`.pivot-camp-${type}-${fKey}`).forEach(e=>e.remove());
   if(!isExp){
-    let insertAfter=row;
+    let after=row;
     camps.forEach(camp=>{
-      let cS={},cC={};countries.forEach(c=>{cS[c]=0;cC[c]=0;});
-      countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};cS[c]=v.spend;cC[c]=v.conv;});
-      const totS=countries.reduce((s,c)=>s+cS[c],0);const totC=countries.reduce((s,c)=>s+cC[c],0);
-      let totCell=type==='Inversion'?curr(totS):type==='Leads'?totC.toFixed(1):totC>0?curr(totS/totC):'—';
-      const campTr=document.createElement('tr');
-      campTr.className=`camp-row pivot-camp-${type}-${fKey}`;
+      let cS={},cC={};countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};cS[c]=v.spend;cC[c]=v.conv;});
+      const totS=countries.reduce((s,c)=>s+cS[c],0),totC=countries.reduce((s,c)=>s+cC[c],0);
+      let totCell=metric==='spend'?curr(totS):metric==='conv'?totC.toFixed(1):totC>0?curr(totS/totC):'—';
+      const campTr=document.createElement('tr');campTr.className=`camp-row pivot-camp-${type}-${fKey}`;
       campTr.innerHTML=`<td title="${camp.name}">${shortName(camp.name)}</td>`+
         countries.map(c=>{
-          if(type==='Inversion')return`<td>${cS[c]>0?curr(cS[c]):'—'}</td>`;
-          if(type==='Leads')return`<td>${cC[c]>0?cC[c].toFixed(1):'—'}</td>`;
+          if(metric==='spend')return`<td>${cS[c]>0?curr(cS[c]):'—'}</td>`;
+          if(metric==='conv')return`<td>${cC[c]>0?cC[c].toFixed(1):'—'}</td>`;
           return`<td>${cC[c]>0?curr(cS[c]/cC[c]):'—'}</td>`;
         }).join('')+`<td>${totCell}</td>`;
-      insertAfter.after(campTr);
-      insertAfter=campTr;
+      after.after(campTr);after=campTr;
     });
+    setTimeout(()=>highlightRows(`body${type}`,metric),50);
+  }
+}
+
+// --- META PIVOT TABLES ---
+function buildMetaPivotData(){
+  const countries=new Set();
+  const data={};
+  metaGeoData.forEach(r=>{
+    const tipoKey=getMetaTipo(r.campaign_name||'');
+    const country=r.country;if(!country)return;
+    countries.add(country);
+    const spend=Number(r.spend||0),leads=getMetaLeads(r.actions);
+    if(!data[tipoKey])data[tipoKey]={};
+    if(!data[tipoKey][r.campaign_name])data[tipoKey][r.campaign_name]={name:r.campaign_name,countries:{}};
+    if(!data[tipoKey][r.campaign_name].countries[country])data[tipoKey][r.campaign_name].countries[country]={spend:0,leads:0};
+    data[tipoKey][r.campaign_name].countries[country].spend+=spend;
+    data[tipoKey][r.campaign_name].countries[country].leads+=leads;
+  });
+  return{data,countries:[...countries].sort()};
+}
+
+function renderMetaTables(){
+  const{data,countries}=buildMetaPivotData();
+  [['MetaInversion','spend'],['MetaLeads','leads'],['MetaCPL','cpl']].forEach(([type,metric])=>{
+    const head=document.getElementById(`head${type}`);
+    const body=document.getElementById(`body${type}`);
+    if(!head||!body)return;
+    head.innerHTML='<th>Tipo de campaña</th>'+countries.map(c=>`<th>${c}</th>`).join('')+'<th>Total</th>';
+    body.innerHTML='';
+    let allS={},allL={};countries.forEach(c=>{allS[c]=0;allL[c]=0;});
+
+    META_GRUPOS.forEach(grupo=>{
+      const camps=Object.values(data[grupo.key]||{});if(!camps.length)return;
+      let gS={},gL={};countries.forEach(c=>{gS[c]=0;gL[c]=0;});
+      camps.forEach(camp=>countries.forEach(c=>{const v=camp.countries[c]||{spend:0,leads:0};gS[c]+=v.spend;gL[c]+=v.leads;}));
+      countries.forEach(c=>{allS[c]+=gS[c];allL[c]+=gL[c];});
+      const totS=countries.reduce((s,c)=>s+gS[c],0),totL=countries.reduce((s,c)=>s+gL[c],0);
+      let totCell=metric==='spend'?curr(totS):metric==='leads'?totL.toFixed(0):totL>0?curr(totS/totL):'—';
+      const rowId=`meta_${type}_${grupo.key}`;
+      const tr=document.createElement('tr');tr.className='faculty-row';tr.id=rowId;tr.dataset.expanded='0';
+      tr.onclick=()=>toggleMetaGrupo(grupo.key,type,metric,camps,countries,rowId);
+      tr.innerHTML=`<td><span class="expand-icon">▶</span>${grupo.label}</td>`+
+        countries.map(c=>{
+          if(metric==='spend')return`<td>${gS[c]>0?curr(gS[c]):'—'}</td>`;
+          if(metric==='leads')return`<td>${gL[c]>0?gL[c].toFixed(0):'—'}</td>`;
+          return`<td>${gL[c]>0?curr(gS[c]/gL[c]):'—'}</td>`;
+        }).join('')+`<td>${totCell}</td>`;
+      body.appendChild(tr);
+    });
+
+    const gtS=countries.reduce((s,c)=>s+allS[c],0),gtL=countries.reduce((s,c)=>s+allL[c],0);
+    let gtCell=metric==='spend'?curr(gtS):metric==='leads'?gtL.toFixed(0):gtL>0?curr(gtS/gtL):'—';
+    const lbl=metric==='spend'?'TOTAL INVERSIÓN':metric==='leads'?'TOTAL LEADS':'TOTAL COSTO POR LEAD';
+    const totalTr=document.createElement('tr');totalTr.className='total-row';
+    totalTr.innerHTML=`<td>${lbl}</td>`+countries.map(c=>{
+      if(metric==='spend')return`<td>${curr(allS[c])}</td>`;
+      if(metric==='leads')return`<td>${allL[c].toFixed(0)}</td>`;
+      return`<td>${allL[c]>0?curr(allS[c]/allL[c]):'—'}</td>`;
+    }).join('')+`<td>${gtCell}</td>`;
+    body.appendChild(totalTr);
+    setTimeout(()=>highlightRows(`body${type}`,metric==='cpl'?'cpl':metric==='leads'?'conv':'spend'),50);
+  });
+}
+
+function toggleMetaGrupo(grupoKey,type,metric,camps,countries,rowId){
+  const row=document.getElementById(rowId);
+  const isExp=row.dataset.expanded==='1';
+  row.dataset.expanded=isExp?'0':'1';
+  row.classList.toggle('expanded');
+  document.querySelectorAll(`.meta-camp-${type}-${grupoKey}`).forEach(e=>e.remove());
+  if(!isExp){
+    let after=row;
+    camps.forEach(camp=>{
+      let cS={},cL={};countries.forEach(c=>{const v=camp.countries[c]||{spend:0,leads:0};cS[c]=v.spend;cL[c]=v.leads;});
+      const totS=countries.reduce((s,c)=>s+cS[c],0),totL=countries.reduce((s,c)=>s+cL[c],0);
+      let totCell=metric==='spend'?curr(totS):metric==='leads'?totL.toFixed(0):totL>0?curr(totS/totL):'—';
+      const campTr=document.createElement('tr');campTr.className=`camp-row meta-camp-${type}-${grupoKey}`;
+      campTr.innerHTML=`<td title="${camp.name}">${shortName(camp.name)}</td>`+
+        countries.map(c=>{
+          if(metric==='spend')return`<td>${cS[c]>0?curr(cS[c]):'—'}</td>`;
+          if(metric==='leads')return`<td>${cL[c]>0?cL[c].toFixed(0):'—'}</td>`;
+          return`<td>${cL[c]>0?curr(cS[c]/cL[c]):'—'}</td>`;
+        }).join('')+`<td>${totCell}</td>`;
+      after.after(campTr);after=campTr;
+    });
+    setTimeout(()=>highlightRows(`body${type}`,metric==='cpl'?'cpl':metric==='leads'?'conv':'spend'),50);
   }
 }
 
@@ -549,90 +605,54 @@ function renderCampaignTables(){
   const searchGeo=allGeoRows.filter(g=>g.campaign.channelType==='SEARCH');
   const pmaxGeo=allGeoRows.filter(g=>g.campaign.channelType==='PERFORMANCE_MAX');
   const videoGeo=allGeoRows.filter(g=>g.campaign.channelType==='VIDEO');
-
   renderCampTable('tableSearch',search,searchGeo,fSC,fSCo,false,7);
   renderCampTable('tablePmax',pmax,pmaxGeo,fPC,fPCo,false,7);
   renderCampTable('tableVideo',video,videoGeo,fVC,fVCo,true,8);
 }
 
 function renderCampTable(tbodyId,campaigns,geoRows,campFilter,countryFilter,isVideo,cols){
-  const tbody=document.getElementById(tbodyId);
-  tbody.innerHTML='';
-  let hasRows=false;
-
+  const tbody=document.getElementById(tbodyId);tbody.innerHTML='';let hasRows=false;
   campaigns.forEach(camp=>{
-    const campName=getName(camp);
-    const campRes=camp.campaign?.resourceName||'';
+    const campName=getName(camp),campRes=camp.campaign?.resourceName||'';
     if(campFilter&&!campName.toLowerCase().includes(campFilter))return;
     const geoForCamp=geoRows.filter(g=>g.campaign.resourceName===campRes);
     const campKey=`${tbodyId}_${campRes}`;
-
     if(geoForCamp.length>0){
       const filtered=countryFilter?geoForCamp.filter(g=>g.country===countryFilter):geoForCamp;
       if(!filtered.length)return;
       hasRows=true;
-      const status=getStatus(camp);
-      const statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
+      const status=getStatus(camp),statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
       const isExp=expandedCamp[campKey];
-
-      const headTr=document.createElement('tr');
-      headTr.className='camp-header-row';
-      headTr.style.cursor='pointer';
-      headTr.dataset.key=campKey;
+      const headTr=document.createElement('tr');headTr.className='camp-header-row';
       headTr.onclick=()=>toggleCampDetail(campKey,filtered,isVideo,headTr);
       headTr.innerHTML=`<td style="text-align:left"><span class="expand-icon${isExp?' expanded':''}" id="icon_${campKey}">▶</span>${shortName(campName)}</td>`+
         `<td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td>`+
         `<td colspan="${cols-2}" style="text-align:right;color:var(--up-gray);font-size:11px">${filtered.length} país${filtered.length!==1?'es':''}</td>`;
       tbody.appendChild(headTr);
-
-      if(isExp){
-        filtered.forEach(g=>{
-          tbody.appendChild(buildGeoRow(g,isVideo,campKey));
-        });
-      }
+      if(isExp) filtered.forEach(g=>tbody.appendChild(buildGeoRow(g,isVideo,campKey)));
     } else {
-      if(countryFilter)return;
-      hasRows=true;
+      if(countryFilter)return;hasRows=true;
       const m=camp.metrics||{};
-      const spend=Number(m.costMicros||0)/1e6;
-      const imp=Number(m.impressions||0);
-      const clk=Number(m.clicks||0);
-      const conv=Number(m.conversions||0);
-      const ctr=imp?(clk/imp):0;
-      const cpm=imp?((spend/imp)*1000):0;
-      const cpp=conv?(spend/conv):0;
-      const status=getStatus(camp);
-      const statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
-      const countries=camp.countries||'—';
+      const spend=Number(m.costMicros||0)/1e6,imp=Number(m.impressions||0),clk=Number(m.clicks||0),conv=Number(m.conversions||0);
+      const ctr=imp?(clk/imp):0,cpm=imp?((spend/imp)*1000):0,cpp=conv?(spend/conv):0;
+      const status=getStatus(camp),statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
       const tr=document.createElement('tr');
       if(isVideo){
-        tr.innerHTML=`<td style="text-align:left" title="${campName}">${shortName(campName)}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td>${countries}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${curr(cpm)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
+        tr.innerHTML=`<td style="text-align:left" title="${campName}">${shortName(campName)}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td>${camp.countries||'—'}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${curr(cpm)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
       } else {
-        tr.innerHTML=`<td style="text-align:left" title="${campName}">${shortName(campName)}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td>${countries}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
+        tr.innerHTML=`<td style="text-align:left" title="${campName}">${shortName(campName)}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td>${camp.countries||'—'}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
       }
       tbody.appendChild(tr);
     }
   });
-
-  if(!hasRows){
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td colspan="${cols}" class="center">Sin resultados.</td>`;
-    tbody.appendChild(tr);
-  }
+  if(!hasRows){const tr=document.createElement('tr');tr.innerHTML=`<td colspan="${cols}" class="center">Sin resultados.</td>`;tbody.appendChild(tr);}
 }
 
 function buildGeoRow(g,isVideo,campKey){
   const m=g.metrics||{};
-  const spend=Number(m.costMicros||0)/1e6;
-  const imp=Number(m.impressions||0);
-  const clk=Number(m.clicks||0);
-  const conv=Number(m.conversions||0);
-  const ctr=imp?(clk/imp):0;
-  const cpm=imp?((spend/imp)*1000):0;
-  const cpp=conv?(spend/conv):0;
-  const tr=document.createElement('tr');
-  tr.className='geo-detail-row';
-  tr.dataset.campKey=campKey;
+  const spend=Number(m.costMicros||0)/1e6,imp=Number(m.impressions||0),clk=Number(m.clicks||0),conv=Number(m.conversions||0);
+  const ctr=imp?(clk/imp):0,cpm=imp?((spend/imp)*1000):0,cpp=conv?(spend/conv):0;
+  const tr=document.createElement('tr');tr.className='geo-detail-row';tr.dataset.campKey=campKey;
   if(isVideo){
     tr.innerHTML=`<td style="text-align:left">↳ ${g.country}</td><td>—</td><td>${g.country}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${curr(cpm)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
   } else {
@@ -642,21 +662,11 @@ function buildGeoRow(g,isVideo,campKey){
 }
 
 function toggleCampDetail(campKey,filtered,isVideo,headTr){
-  const isExp=expandedCamp[campKey];
-  expandedCamp[campKey]=!isExp;
+  const isExp=expandedCamp[campKey];expandedCamp[campKey]=!isExp;
   const icon=document.getElementById(`icon_${campKey}`);
   if(icon)icon.classList.toggle('expanded');
-
-  // Remove existing geo rows
   document.querySelectorAll(`[data-camp-key="${campKey}"]`).forEach(e=>e.remove());
-
-  if(!isExp){
-    let after=headTr;
-    filtered.forEach(g=>{
-      const row=buildGeoRow(g,isVideo,campKey);
-      after.after(row);after=row;
-    });
-  }
+  if(!isExp){let after=headTr;filtered.forEach(g=>{const row=buildGeoRow(g,isVideo,campKey);after.after(row);after=row;});}
 }
 
 function switchPage(el,pageId){
@@ -668,299 +678,13 @@ function switchPage(el,pageId){
 function switchLevel(el,level){
   document.querySelectorAll('.level-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');currentLevel=level;
-  if(CUSTOMER_ID)loadData();
+  const since=document.getElementById('dateFrom').value;
+  const until=document.getElementById('dateTo').value;
+  loadGads(since,until);
 }
 
-// --- META ADS ---
-const META_GRUPOS = [
-  {key:'leads', label:'Leads (Meta)', match:['leads']},
-  {key:'trafico', label:'Tráfico', match:['tráfico','trafico']},
-  {key:'conversaciones', label:'Conversaciones (WhatsApp)', match:['conversaciones','whatsapp']},
-];
-
-let metaLoaded = false;
-let metaGeoData = [];
-
-function getMetaTipo(name){
-  const n = name.toLowerCase();
-  for(const g of META_GRUPOS){ if(g.match.some(m=>n.includes(m))) return g.key; }
-  return 'otros';
-}
-
-function getMetaLeads(actions){
-  if(!actions) return 0;
-  const a = actions.find(x=>x.action_type==='lead'||x.action_type==='offsite_conversion.fb_pixel_lead');
-  return a ? Number(a.value) : 0;
-}
-
-async function loadMetaData(){
-  if(metaLoaded) return;
-  const since = document.getElementById('dateFrom').value;
-  const until = document.getElementById('dateTo').value;
-  try {
-    const r = await fetch(`${PROXY}/meta-geo?level=campaign&since=${since}&until=${until}`);
-    const d = await r.json();
-    metaGeoData = d.data || [];
-    metaLoaded = true;
-    renderMetaTables();
-  } catch(e) {
-    console.error('Error Meta:', e);
-  }
-}
-
-function buildMetaPivotData(){
-  const countries = new Set();
-  const data = {}; // data[tipoKey][campName][country] = {spend, leads}
-
-  metaGeoData.forEach(r => {
-    const campName = r.campaign_name || '—';
-    const tipoKey = getMetaTipo(campName);
-    const country = r.country;
-    if(!country) return;
-    countries.add(country);
-    const spend = Number(r.spend || 0);
-    const leads = getMetaLeads(r.actions);
-    if(!data[tipoKey]) data[tipoKey] = {};
-    if(!data[tipoKey][campName]) data[tipoKey][campName] = {name: campName, countries: {}};
-    if(!data[tipoKey][campName].countries[country]) data[tipoKey][campName].countries[country] = {spend:0, leads:0};
-    data[tipoKey][campName].countries[country].spend += spend;
-    data[tipoKey][campName].countries[country].leads += leads;
-  });
-
-  return {data, countries: [...countries].sort()};
-}
-
-function renderMetaTables(){
-  const {data, countries} = buildMetaPivotData();
-
-  ['MetaInversion','MetaLeads','MetaCPL'].forEach(type => {
-    const shortType = type.replace('Meta','');
-    const head = document.getElementById(`head${type}`);
-    const body = document.getElementById(`body${type}`);
-    if(!head||!body) return;
-    head.innerHTML = '<th>Tipo de campaña</th>' + countries.map(c=>`<th>${c}</th>`).join('') + '<th>Total</th>';
-    body.innerHTML = '';
-
-    let allS={}, allL={};
-    countries.forEach(c=>{allS[c]=0;allL[c]=0;});
-
-    META_GRUPOS.forEach(grupo => {
-      const gData = data[grupo.key] || {};
-      const camps = Object.values(gData);
-      if(!camps.length) return;
-
-      let gS={}, gL={};
-      countries.forEach(c=>{gS[c]=0;gL[c]=0;});
-      camps.forEach(camp => {
-        countries.forEach(c => {
-          const v = camp.countries[c] || {spend:0,leads:0};
-          gS[c] += v.spend; gL[c] += v.leads;
-        });
-      });
-      countries.forEach(c=>{allS[c]+=gS[c];allL[c]+=gL[c];});
-
-      const totS = countries.reduce((s,c)=>s+gS[c],0);
-      const totL = countries.reduce((s,c)=>s+gL[c],0);
-      let totalCell = shortType==='Inversion'?curr(totS):shortType==='Leads'?totL.toFixed(0):totL>0?curr(totS/totL):'—';
-
-      const rowId = `meta_${type}_${grupo.key}`;
-      const tr = document.createElement('tr');
-      tr.className = 'faculty-row'; tr.id = rowId; tr.dataset.expanded='0';
-      tr.onclick = () => toggleMetaGrupo(grupo.key, type, camps, countries, rowId);
-      tr.innerHTML = `<td><span class="expand-icon">▶</span>${grupo.label}</td>` +
-        countries.map(c => {
-          if(shortType==='Inversion') return `<td>${gS[c]>0?curr(gS[c]):'—'}</td>`;
-          if(shortType==='Leads') return `<td>${gL[c]>0?gL[c].toFixed(0):'—'}</td>`;
-          return `<td>${gL[c]>0?curr(gS[c]/gL[c]):'—'}</td>`;
-        }).join('') + `<td>${totalCell}</td>`;
-      body.appendChild(tr);
-    });
-
-    const gtS = countries.reduce((s,c)=>s+allS[c],0);
-    const gtL = countries.reduce((s,c)=>s+allL[c],0);
-    let gtCell = shortType==='Inversion'?curr(gtS):shortType==='Leads'?gtL.toFixed(0):gtL>0?curr(gtS/gtL):'—';
-    const totalLabel = shortType==='Inversion'?'TOTAL INVERSIÓN':shortType==='Leads'?'TOTAL LEADS':'TOTAL COSTO POR LEAD';
-    const totalTr = document.createElement('tr');
-    totalTr.className = 'total-row';
-    totalTr.innerHTML = `<td>${totalLabel}</td>` +
-      countries.map(c => {
-        if(shortType==='Inversion') return `<td>${curr(allS[c])}</td>`;
-        if(shortType==='Leads') return `<td>${allL[c].toFixed(0)}</td>`;
-        return `<td>${allL[c]>0?curr(allS[c]/allL[c]):'—'}</td>`;
-      }).join('') + `<td>${gtCell}</td>`;
-    body.appendChild(totalTr);
-  });
-}
-
-function toggleMetaGrupo(grupoKey, type, camps, countries, rowId){
-  const row = document.getElementById(rowId);
-  const isExp = row.dataset.expanded === '1';
-  row.dataset.expanded = isExp ? '0' : '1';
-  row.classList.toggle('expanded');
-  document.querySelectorAll(`.meta-camp-${type}-${grupoKey}`).forEach(e=>e.remove());
-  if(!isExp){
-    let insertAfter = row;
-    camps.forEach(camp => {
-      let cS={}, cL={};
-      countries.forEach(c=>{
-        const v = camp.countries[c]||{spend:0,leads:0};
-        cS[c]=v.spend; cL[c]=v.leads;
-      });
-      const totS = countries.reduce((s,c)=>s+cS[c],0);
-      const totL = countries.reduce((s,c)=>s+cL[c],0);
-      const shortType = type.replace('Meta','');
-      let totCell = shortType==='Inversion'?curr(totS):shortType==='Leads'?totL.toFixed(0):totL>0?curr(totS/totL):'—';
-      const campTr = document.createElement('tr');
-      campTr.className = `camp-row meta-camp-${type}-${grupoKey}`;
-      campTr.innerHTML = `<td title="${camp.name}">${shortName(camp.name)}</td>` +
-        countries.map(c => {
-          if(shortType==='Inversion') return `<td>${cS[c]>0?curr(cS[c]):'—'}</td>`;
-          if(shortType==='Leads') return `<td>${cL[c]>0?cL[c].toFixed(0):'—'}</td>`;
-          return `<td>${cL[c]>0?curr(cS[c]/cL[c]):'—'}</td>`;
-        }).join('') + `<td>${totCell}</td>`;
-      insertAfter.after(campTr);
-      insertAfter = campTr;
-    });
-  }
-}
-
-
-// --- KPIs combinados Google + Meta ---
-let gadsKPI = {spend:0, conv:0, clicks:0, imp:0, ctr:0, cpc:0, cpm:0};
-let metaKPI = {spend:0, leads:0};
-
-function renderKPIs(rows){
-  let ts=0,ti=0,tc=0,tv=0;
-  rows.forEach(r=>{const m=r.metrics||{};ts+=Number(m.costMicros||0)/1e6;ti+=Number(m.impressions||0);tc+=Number(m.clicks||0);tv+=Number(m.conversions||0);});
-  gadsKPI = {spend:ts, conv:tv, clicks:tc, imp:ti};
-  updateCombinedKPIs();
-}
-
-function updateMetaKPIs(){
-  let ms=0, ml=0;
-  metaGeoData.forEach(r=>{
-    ms += Number(r.spend||0);
-    ml += getMetaLeads(r.actions);
-  });
-  metaKPI = {spend:ms, leads:ml};
-  updateCombinedKPIs();
-}
-
-function updateCombinedKPIs(){
-  const ts = gadsKPI.spend + metaKPI.spend;
-  const tv = gadsKPI.conv + metaKPI.leads;
-  const ti = gadsKPI.imp;
-  const tc = gadsKPI.clicks;
-  document.getElementById('k-spend').textContent = curr(ts);
-  document.getElementById('k-conv').textContent = tv.toFixed(0);
-  document.getElementById('k-cpp').textContent = tv>0?curr(ts/tv):'—';
-  document.getElementById('k-clicks').textContent = num(tc);
-  document.getElementById('k-ctr').textContent = ti?pct(tc/ti):'—';
-  document.getElementById('k-cpc').textContent = tc?curr(gadsKPI.spend/tc):'—';
-  document.getElementById('k-cpm').textContent = ti?curr(gadsKPI.spend/ti*1000):'—';
-  // Desglose
-  const sg = document.getElementById('k-spend-g');
-  const sm = document.getElementById('k-spend-m');
-  const cg = document.getElementById('k-conv-g');
-  const cm = document.getElementById('k-conv-m');
-  const cpg = document.getElementById('k-cpp-g');
-  const cpm2 = document.getElementById('k-cpp-m');
-  if(sg) sg.textContent = curr(gadsKPI.spend);
-  if(sm) sm.textContent = curr(metaKPI.spend);
-  if(cg) cg.textContent = gadsKPI.conv.toFixed(0);
-  if(cm) cm.textContent = metaKPI.leads.toFixed(0);
-  if(cpg) cpg.textContent = gadsKPI.conv>0?curr(gadsKPI.spend/gadsKPI.conv):'—';
-  if(cpm2) cpm2.textContent = metaKPI.leads>0?curr(metaKPI.spend/metaKPI.leads):'—';
-}
-
-function reloadMetaIfActive(){
-  metaLoaded = false;
-  const metaTab = document.getElementById('pageMeta');
-  if(metaTab && metaTab.classList.contains('active')){
-    loadMetaData();
-  }
-}
-
-// --- HIGHLIGHT de celdas en tablas pivot ---
-function highlightPivotTable(tbodyId, type){
-  const tbody = document.getElementById(tbodyId);
-  if(!tbody) return;
-  const rows = tbody.querySelectorAll('tr.faculty-row, tr.camp-row');
-  rows.forEach(row => {
-    const cells = row.querySelectorAll('td');
-    if(cells.length < 2) return;
-    // Ignorar primera celda (nombre) y última (total)
-    const valueCells = Array.from(cells).slice(1, cells.length-1);
-    const values = valueCells.map(td => {
-      const t = td.textContent.replace(/[$,.]/g,'').replace('—','').trim();
-      return t ? parseFloat(t) : null;
-    }).filter(v => v !== null && v > 0);
-    if(!values.length) return;
-    const max = Math.max(...values);
-    const min = Math.min(...values);
-    valueCells.forEach(td => {
-      td.classList.remove('cell-best','cell-worst');
-      const t = td.textContent.replace(/[$,.]/g,'').replace('—','').trim();
-      if(!t) return;
-      const v = parseFloat(t);
-      if(type === 'Inversion' || type === 'Leads'){
-        if(v === max && v > 0) td.classList.add('cell-best');
-      } else { // CPL - menor es mejor
-        if(v === min && v > 0) td.classList.add('cell-best');
-      }
-    });
-  });
-}
-
-// Override renderPivotTables para agregar highlight
-const _origRenderPivot = renderPivotTables;
-function renderPivotTables(){
-  _origRenderPivot();
-  setTimeout(()=>{
-    highlightPivotTable('bodyInversion','Inversion');
-    highlightPivotTable('bodyLeads','Leads');
-    highlightPivotTable('bodyCPL','CPL');
-  }, 50);
-}
-
-// Override renderMetaTables para agregar highlight
-const _origRenderMeta = renderMetaTables;
-function renderMetaTables(){
-  _origRenderMeta();
-  updateMetaKPIs();
-  setTimeout(()=>{
-    highlightPivotTable('bodyMetaInversion','Inversion');
-    highlightPivotTable('bodyMetaLeads','Leads');
-    highlightPivotTable('bodyMetaCPL','CPL');
-  }, 50);
-}
-
-// Override togglePivotFacultad para re-aplicar highlight al expandir
-const _origToggle = togglePivotFacultad;
-function togglePivotFacultad(fKey,type,camps,countries,rowId){
-  _origToggle(fKey,type,camps,countries,rowId);
-  setTimeout(()=>{
-    const tbodyId = `body${type}`;
-    const t = type.replace('Meta','');
-    highlightPivotTable(tbodyId, t==='Inversion'?'Inversion':t==='Leads'?'Leads':'CPL');
-  }, 50);
-}
-
-const _origToggleMeta = toggleMetaGrupo;
-function toggleMetaGrupo(grupoKey,type,camps,countries,rowId){
-  _origToggleMeta(grupoKey,type,camps,countries,rowId);
-  setTimeout(()=>{
-    const t = type.replace('Meta','');
-    highlightPivotTable(`body${type}`, t==='Inversion'?'Inversion':t==='Leads'?'Leads':'CPL');
-  }, 50);
-}
-
-
-// Cargar datos automáticamente al abrir la página
-window.addEventListener('load', function(){
-  loadData();
-});
-
+// Cargar al iniciar
+window.addEventListener('load',()=>loadAll());
 </script>
 </body>
 </html>
