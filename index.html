@@ -3,87 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Google Ads</title>
+<title>Universidad de Palermo - Reporte de Performance</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
+:root{
+  --up-navy:#003366;
+  --up-gold:#FFB800;
+  --up-light:#E8EFF7;
+  --up-text:#1a1a2e;
+  --up-gray:#6b7280;
+  --up-border:#d1d9e6;
+  --up-bg:#f0f4f8;
+  --up-white:#ffffff;
+  --up-success:#16a34a;
+  --up-success-bg:#dcfce7;
+  --up-warning:#b45309;
+  --up-warning-bg:#fef3c7;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;padding:1.5rem}
-h1{font-size:20px;font-weight:600;margin-bottom:1.25rem}
-h2{font-size:15px;font-weight:600;color:#1d1d1f;margin-bottom:.75rem}
-h3{font-size:13px;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.5rem}
-.kpi{background:#fff;border-radius:12px;padding:.9rem 1rem;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.kpi-label{font-size:12px;color:#86868b;margin-bottom:4px}
-.kpi-value{font-size:22px;font-weight:500;color:#1d1d1f}
-.config-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:1.25rem;padding:1rem;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.config-bar label{font-size:13px;color:#86868b}
-.config-bar input[type=date]{font-size:13px;padding:5px 8px;border-radius:8px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f}
-.btn{padding:7px 16px;border-radius:8px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;cursor:pointer;font-size:13px;font-weight:500}
-.btn:hover{background:#f5f5f7}
-.btn-primary{background:#534AB7;color:#fff;border-color:#534AB7}
-.btn-primary:hover{background:#4338a0}
-.connect-panel{background:#fff;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.connect-panel h3{font-size:15px;font-weight:500;margin-bottom:.25rem;text-transform:none;letter-spacing:0;color:#1d1d1f}
-.connect-panel p{font-size:13px;color:#86868b;margin-bottom:.75rem}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--up-bg);color:var(--up-text);padding:0}
+
+/* Header */
+.header{background:var(--up-navy);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.header-title{color:var(--up-white)}
+.header-title h1{font-size:18px;font-weight:600;letter-spacing:.01em}
+.header-title p{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px}
+.header-logo{height:40px;object-fit:contain;filter:brightness(0) invert(1)}
+
+.content{padding:1.5rem 2rem}
+
+/* Connect panel */
+.connect-panel{background:var(--up-white);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:4px solid var(--up-gold)}
+.connect-panel h3{font-size:15px;font-weight:600;margin-bottom:.25rem;color:var(--up-navy)}
+.connect-panel p{font-size:13px;color:var(--up-gray);margin-bottom:.75rem}
 .input-row{display:flex;gap:8px;flex-wrap:wrap}
-.input-row input{flex:1;min-width:200px;padding:8px 12px;border-radius:8px;border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;font-size:13px}
-.err{font-size:12px;margin-top:6px}
-.err a{color:#534AB7}
-.info{font-size:12px;color:#86868b;margin-top:6px}
-.section{background:#fff;border-radius:12px;padding:1rem;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:1.25rem}
-.section-header{display:flex;align-items:center;gap:8px;margin-bottom:.75rem}
-.type-badge{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
-.search-badge{background:#dbeafe;color:#1e40af}
-.pmax-badge{background:#ede9ff;color:#4c1d95}
-.video-badge{background:#fce7f3;color:#9d174d}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem}
-.filters input,.filters select{font-size:12px;padding:5px 8px;border-radius:8px;border:1px solid #d2d2d7;background:#f5f5f7;color:#1d1d1f;min-width:160px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px}
-thead th{background:#f5f5f7;padding:8px 10px;text-align:right;font-weight:500;color:#86868b;border-bottom:1px solid #e5e5ea;white-space:nowrap}
-thead th:first-child{text-align:left}
-tbody td{padding:7px 10px;border-bottom:1px solid #f5f5f7;color:#1d1d1f;white-space:nowrap;text-align:right}
-tbody td:first-child{text-align:left;max-width:200px;overflow:hidden;text-overflow:ellipsis}
-tbody tr:hover td{background:#f9f9fb}
-tbody tr.camp-row td{font-size:11px;color:#555;background:#fafafa}
-tbody tr.camp-row:hover td{background:#f5f5f7}
-tbody tr.faculty-row td{font-weight:500;cursor:pointer}
-tbody tr.faculty-row:hover td{background:#f0f4ff}
-tbody tr.subtotal-row td{font-weight:600;background:#f0f4ff;color:#1d1d1f}
-tbody tr.total-row td{font-weight:700;background:#534AB7;color:#fff}
-tbody tr.total-row:hover td{background:#4338a0}
-.expand-icon{margin-right:6px;display:inline-block;transition:transform .2s;font-size:10px}
-.expanded .expand-icon{transform:rotate(90deg)}
-.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;font-weight:500}
-.ENABLED{background:#d1fae5;color:#065f46}
-.PAUSED{background:#fef3c7;color:#92400e}
-.REMOVED{background:#f3f4f6;color:#6b7280}
-.level-tabs{display:flex;gap:4px;margin-bottom:1rem;border-bottom:1px solid #e5e5ea}
-.level-tab{padding:7px 14px;font-size:13px;cursor:pointer;color:#86868b;border-bottom:2px solid transparent;margin-bottom:-1px}
-.level-tab.active{color:#1d1d1f;border-bottom-color:#534AB7;font-weight:500}
-.page-tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:2px solid #e5e5ea}
-.page-tab{padding:10px 20px;font-size:14px;cursor:pointer;color:#86868b;border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:500}
-.page-tab.active{color:#534AB7;border-bottom-color:#534AB7}
+.input-row input{flex:1;min-width:200px;padding:8px 12px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-white);color:var(--up-text);font-size:13px}
+.input-row input:focus{outline:none;border-color:var(--up-navy)}
+.err{font-size:12px;margin-top:6px;color:#dc2626}
+.err a{color:var(--up-navy)}
+.info{font-size:12px;color:var(--up-gray);margin-top:6px}
+
+/* Config bar */
+.config-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:1.25rem;padding:.85rem 1.25rem;background:var(--up-white);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.config-bar label{font-size:13px;color:var(--up-gray);font-weight:500}
+.config-bar input[type=date]{font-size:13px;padding:5px 8px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-white);color:var(--up-text)}
+.btn{padding:7px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
+.btn-primary{background:var(--up-navy);color:var(--up-white)}
+.btn-primary:hover{background:#002244}
+.btn-connect{background:var(--up-gold);color:var(--up-navy)}
+.btn-connect:hover{background:#e6a600}
+
+/* Status */
+.status-bar{font-size:12px;color:var(--up-gray)}
+.status-ok{color:var(--up-success);font-weight:600}
+.status-err{color:#dc2626;font-weight:600}
+.status-warn{color:var(--up-warning);font-weight:600}
+
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.5rem}
+.kpi{background:var(--up-white);border-radius:12px;padding:.9rem 1.1rem;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:3px solid var(--up-gold)}
+.kpi-label{font-size:11px;color:var(--up-gray);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+.kpi-value{font-size:22px;font-weight:700;color:var(--up-navy)}
+
+/* Page tabs */
+.page-tabs{display:flex;gap:0;margin-bottom:1.5rem;background:var(--up-white);border-radius:12px;padding:4px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.page-tab{flex:1;padding:10px 16px;font-size:13px;cursor:pointer;color:var(--up-gray);border-radius:9px;text-align:center;font-weight:500;transition:all .15s}
+.page-tab.active{background:var(--up-navy);color:var(--up-white);font-weight:600}
 .page{display:none}
 .page.active{display:block}
-.status-bar{font-size:12px;color:#86868b}
-.status-ok{color:#34c759}
-.status-err{color:#ff3b30}
-.status-warn{color:#ff9500}
-.pivot-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid #e5e5ea}
-.camp-row td:first-child{padding-left:2rem}
+
+/* Section */
+.section{background:var(--up-white);border-radius:12px;padding:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:1.25rem}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2px solid var(--up-light)}
+.section-header h2{font-size:15px;font-weight:700;color:var(--up-navy)}
+.type-badge{font-size:11px;padding:3px 10px;border-radius:99px;font-weight:700}
+.search-badge{background:#dbeafe;color:#1e3a8a}
+.pmax-badge{background:#ede9fe;color:#4c1d95}
+.video-badge{background:#fce7f3;color:#831843}
+
+/* Filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem}
+.filters input,.filters select{font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-bg);color:var(--up-text);min-width:160px}
+
+/* Level tabs */
+.level-tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:2px solid var(--up-border)}
+.level-tab{padding:8px 16px;font-size:13px;cursor:pointer;color:var(--up-gray);border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:500;transition:all .15s}
+.level-tab.active{color:var(--up-navy);border-bottom-color:var(--up-gold);font-weight:700}
+
+/* Tables */
+.table-wrap{overflow-x:auto}
+.pivot-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--up-border)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--up-navy);color:var(--up-white);padding:9px 12px;text-align:right;font-weight:600;white-space:nowrap}
+thead th:first-child{text-align:left;min-width:180px}
+tbody td{padding:8px 12px;border-bottom:1px solid var(--up-light);color:var(--up-text);text-align:right;white-space:nowrap}
+tbody td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--up-light)}
+
+/* Pivot rows */
+tbody tr.faculty-row{cursor:pointer}
+tbody tr.faculty-row td{font-weight:600;color:var(--up-navy)}
+tbody tr.faculty-row:hover td{background:#e8eef7}
+tbody tr.camp-row td{font-size:11px;color:#555;background:#fafbfc}
+tbody tr.camp-row td:first-child{padding-left:2.5rem}
+tbody tr.camp-row:hover td{background:var(--up-light)}
+tbody tr.subtotal-row td{font-weight:700;background:var(--up-light);color:var(--up-navy);border-top:2px solid var(--up-border)}
+tbody tr.total-row td{font-weight:700;background:var(--up-navy);color:var(--up-white)}
+tbody tr.total-row:hover td{background:#002244}
+
+/* Campaign table rows */
+tbody tr.camp-header-row td{font-weight:600;background:#eef2ff;color:var(--up-navy)}
+tbody tr.geo-detail-row td{font-size:11px;color:#444;background:#fafafa}
+tbody tr.geo-detail-row td:first-child{padding-left:2.5rem}
+tbody tr.geo-detail-row:hover td{background:var(--up-light)}
+
+.expand-icon{margin-right:6px;display:inline-block;transition:transform .2s;font-size:10px;color:var(--up-gold)}
+.expanded .expand-icon{transform:rotate(90deg)}
+
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
+.ENABLED{background:var(--up-success-bg);color:var(--up-success)}
+.PAUSED{background:var(--up-warning-bg);color:var(--up-warning)}
+.REMOVED{background:#f3f4f6;color:#6b7280}
+
+.center{text-align:center!important;padding:2rem;color:var(--up-gray)}
 </style>
 </head>
 <body>
 
-<h1>Dashboard Google Ads</h1>
+<!-- Header -->
+<div class="header">
+  <div class="header-title">
+    <h1>Universidad de Palermo — Reporte de Performance</h1>
+    <p>Google Ads · Dashboard de campañas</p>
+  </div>
+  <img class="header-logo" src="https://www.palermo.edu/images/header/logo.png" alt="Logo UP" onerror="this.style.display='none'"/>
+</div>
+
+<div class="content">
 
 <div class="connect-panel" id="connectPanel">
-  <h3>Conectar cuenta</h3>
+  <h3>Conectar cuenta de Google Ads</h3>
   <p>Ingresá el Customer ID de la cuenta que querés ver.</p>
   <div class="input-row">
     <input id="customerInput" type="text" placeholder="Customer ID (ej: 502-810-7265)"/>
-    <button class="btn btn-primary" onclick="connectAds()">Conectar</button>
+    <button class="btn btn-connect" onclick="connectAds()">Conectar</button>
   </div>
   <div class="err" id="errMsg"></div>
   <div class="info">Los datos se obtienen via tu proxy de Apps Script.</div>
@@ -92,66 +156,43 @@ tbody tr.total-row:hover td{background:#4338a0}
 <div class="config-bar">
   <label>Desde:</label><input type="date" id="dateFrom"/>
   <label>Hasta:</label><input type="date" id="dateTo"/>
-  <button class="btn" onclick="loadData()">Actualizar</button>
+  <button class="btn btn-primary" onclick="loadData()">Actualizar</button>
   <span class="status-bar" id="connStatus"></span>
 </div>
 
 <div class="kpi-grid">
-  <div class="kpi"><div class="kpi-label">Gasto total</div><div class="kpi-value" id="k-spend">—</div></div>
-  <div class="kpi"><div class="kpi-label">Impresiones</div><div class="kpi-value" id="k-imp">—</div></div>
+  <div class="kpi"><div class="kpi-label">Inversión total</div><div class="kpi-value" id="k-spend">—</div></div>
+  <div class="kpi"><div class="kpi-label">Conversiones</div><div class="kpi-value" id="k-conv">—</div></div>
+  <div class="kpi"><div class="kpi-label">Costo/conv.</div><div class="kpi-value" id="k-cpp">—</div></div>
   <div class="kpi"><div class="kpi-label">Clics</div><div class="kpi-value" id="k-clicks">—</div></div>
   <div class="kpi"><div class="kpi-label">CTR</div><div class="kpi-value" id="k-ctr">—</div></div>
   <div class="kpi"><div class="kpi-label">CPC prom.</div><div class="kpi-value" id="k-cpc">—</div></div>
   <div class="kpi"><div class="kpi-label">CPM prom.</div><div class="kpi-value" id="k-cpm">—</div></div>
-  <div class="kpi"><div class="kpi-label">Conversiones</div><div class="kpi-value" id="k-conv">—</div></div>
-  <div class="kpi"><div class="kpi-label">Costo/conv.</div><div class="kpi-value" id="k-cpp">—</div></div>
 </div>
 
 <!-- Page tabs -->
 <div class="page-tabs">
-  <div class="page-tab active" onclick="switchPage(this,'pageResumen')">Resumen por facultad</div>
-  <div class="page-tab" onclick="switchPage(this,'pageCampanas')">Detalle por campaña</div>
+  <div class="page-tab active" onclick="switchPage(this,'pageResumen')">Google Ads | Resumen por Facultad</div>
+  <div class="page-tab" onclick="switchPage(this,'pageCampanas')">Google Ads | Detalle por Campaña</div>
 </div>
 
-<!-- PAGE 1: Resumen por facultad -->
+<!-- PAGE 1 -->
 <div class="page active" id="pageResumen">
-
-  <!-- Inversión -->
   <div class="section">
-    <h2>Inversión por facultad</h2>
-    <div class="pivot-table-wrap">
-      <table id="tableInversion">
-        <thead><tr id="headInversion"></tr></thead>
-        <tbody id="bodyInversion"></tbody>
-      </table>
-    </div>
+    <div class="section-header"><h2>Inversión por Facultad</h2></div>
+    <div class="pivot-table-wrap"><table id="tableInversion"><thead><tr id="headInversion"></tr></thead><tbody id="bodyInversion"></tbody></table></div>
   </div>
-
-  <!-- Leads -->
   <div class="section">
-    <h2>Leads por facultad</h2>
-    <div class="pivot-table-wrap">
-      <table id="tableLeads">
-        <thead><tr id="headLeads"></tr></thead>
-        <tbody id="bodyLeads"></tbody>
-      </table>
-    </div>
+    <div class="section-header"><h2>Leads por Facultad</h2></div>
+    <div class="pivot-table-wrap"><table id="tableLeads"><thead><tr id="headLeads"></tr></thead><tbody id="bodyLeads"></tbody></table></div>
   </div>
-
-  <!-- CPL -->
   <div class="section">
-    <h2>Costo por lead por facultad</h2>
-    <div class="pivot-table-wrap">
-      <table id="tableCPL">
-        <thead><tr id="headCPL"></tr></thead>
-        <tbody id="bodyCPL"></tbody>
-      </table>
-    </div>
+    <div class="section-header"><h2>Costo por Lead por Facultad</h2></div>
+    <div class="pivot-table-wrap"><table id="tableCPL"><thead><tr id="headCPL"></tr></thead><tbody id="bodyCPL"></tbody></table></div>
   </div>
-
 </div>
 
-<!-- PAGE 2: Detalle por campaña -->
+<!-- PAGE 2 -->
 <div class="page" id="pageCampanas">
 
   <div class="level-tabs">
@@ -162,9 +203,7 @@ tbody tr.total-row:hover td{background:#4338a0}
 
   <!-- Search -->
   <div class="section">
-    <div class="section-header">
-      <h2>Search</h2><span class="type-badge search-badge">Search</span>
-    </div>
+    <div class="section-header"><h2>Search</h2><span class="type-badge search-badge">Search</span></div>
     <div class="filters">
       <input type="text" id="filterSearchCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
       <select id="filterSearchCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
@@ -172,20 +211,18 @@ tbody tr.total-row:hover td{background:#4338a0}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th style="width:35%;text-align:left">Nombre</th>
+          <th style="text-align:left;width:35%">Nombre</th>
           <th style="text-align:left">Estado</th>
           <th>País</th><th>Gasto</th><th>CTR</th><th>Conversiones</th><th>Costo/conv.</th>
         </tr></thead>
-        <tbody id="tableSearch"><tr><td colspan="7" style="text-align:center;padding:2rem;color:#86868b">Conectá tu cuenta para ver los datos.</td></tr></tbody>
+        <tbody id="tableSearch"><tr><td colspan="7" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
       </table>
     </div>
   </div>
 
   <!-- PMax -->
   <div class="section">
-    <div class="section-header">
-      <h2>Performance Max</h2><span class="type-badge pmax-badge">PMax</span>
-    </div>
+    <div class="section-header"><h2>Performance Max</h2><span class="type-badge pmax-badge">PMax</span></div>
     <div class="filters">
       <input type="text" id="filterPmaxCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
       <select id="filterPmaxCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
@@ -193,20 +230,18 @@ tbody tr.total-row:hover td{background:#4338a0}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th style="width:35%;text-align:left">Nombre</th>
+          <th style="text-align:left;width:35%">Nombre</th>
           <th style="text-align:left">Estado</th>
           <th>País</th><th>Gasto</th><th>CTR</th><th>Conversiones</th><th>Costo/conv.</th>
         </tr></thead>
-        <tbody id="tablePmax"><tr><td colspan="7" style="text-align:center;padding:2rem;color:#86868b">Conectá tu cuenta para ver los datos.</td></tr></tbody>
+        <tbody id="tablePmax"><tr><td colspan="7" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
       </table>
     </div>
   </div>
 
   <!-- Video -->
   <div class="section">
-    <div class="section-header">
-      <h2>Video</h2><span class="type-badge video-badge">Video</span>
-    </div>
+    <div class="section-header"><h2>Video</h2><span class="type-badge video-badge">Video</span></div>
     <div class="filters">
       <input type="text" id="filterVideoCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
       <select id="filterVideoCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
@@ -214,39 +249,38 @@ tbody tr.total-row:hover td{background:#4338a0}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th style="width:35%;text-align:left">Nombre</th>
+          <th style="text-align:left;width:35%">Nombre</th>
           <th style="text-align:left">Estado</th>
           <th>País</th><th>Gasto</th><th>CTR</th><th>CPM</th><th>Conversiones</th><th>Costo/conv.</th>
         </tr></thead>
-        <tbody id="tableVideo"><tr><td colspan="8" style="text-align:center;padding:2rem;color:#86868b">Conectá tu cuenta para ver los datos.</td></tr></tbody>
+        <tbody id="tableVideo"><tr><td colspan="8" class="center">Conectá tu cuenta para ver los datos.</td></tr></tbody>
       </table>
     </div>
   </div>
 
 </div>
+</div><!-- end content -->
 
 <script>
 const PROXY='https://ads-dashboard-production-d61d.up.railway.app';
 const APPS_SCRIPT='https://script.google.com/macros/s/AKfycbxcowU_GWpXJX-_PN5dz0ERQ137w2P9D5JTV6NDZstUXLz2LDqoH0jmR3kZA044ak8/exec';
 let CUSTOMER_ID='',allRows=[],allGeoRows=[],currentLevel='campaign';
+const expandedCamp={};// track expanded campaigns in page 2
 
-// Mapeo de facultades
 const FACULTADES=[
-  {key:'ingenieria', label:'Ingeniería', match:['ingeniería','ingenieria']},
-  {key:'derecho', label:'Derecho', match:['derecho']},
-  {key:'sociales', label:'Ciencias Sociales', match:['ciencias sociales','sociales']},
-  {key:'diseno', label:'Diseño y Comunicación', match:['diseño','diseno','comunicación','comunicacion']},
-  {key:'mba', label:'MBA', match:['mba']},
-  {key:'negocios', label:'Facultad de Negocios', match:['facultad de negocios']},
-  {key:'online', label:'Carreras Online', match:['carreras online']},
-  {key:'distancia', label:'Carreras a Distancia', match:['distancia']},
-  {key:'ia', label:'Maestría en IA', match:['maestría en ia','maestria en ia','ia']},
+  {key:'ingenieria',label:'Ingeniería',match:['ingeniería','ingenieria']},
+  {key:'derecho',label:'Derecho',match:['derecho']},
+  {key:'sociales',label:'Ciencias Sociales',match:['ciencias sociales','sociales']},
+  {key:'diseno',label:'Diseño y Comunicación',match:['diseño','diseno','comunicación','comunicacion']},
+  {key:'mba',label:'MBA',match:['mba']},
+  {key:'negocios',label:'Facultad de Negocios',match:['facultad de negocios']},
+  {key:'online',label:'Carreras Online',match:['carreras online']},
+  {key:'distancia',label:'Carreras a Distancia',match:['distancia']},
+  {key:'ia',label:'Maestría en IA',match:['maestría en ia','maestria en ia',' ia ','| ia']},
 ];
-
-// Grupos para subtotales
 const GRUPOS=[
-  {label:'FACULTADES', keys:['ingenieria','derecho','sociales','diseno','mba','negocios','ia']},
-  {label:'GENÉRICAS', keys:['online','distancia']},
+  {label:'FACULTADES',keys:['ingenieria','derecho','sociales','diseno','mba','negocios','ia']},
+  {label:'GENÉRICAS',keys:['online','distancia']},
 ];
 
 (function(){
@@ -256,35 +290,30 @@ const GRUPOS=[
   document.getElementById('dateFrom').value=from.toISOString().split('T')[0];
 })();
 
-function curr(n,decimals=2){return n==null||n===0?'$0,00':'$'+Number(n).toLocaleString('es-AR',{minimumFractionDigits:decimals,maximumFractionDigits:decimals});}
-function num(n){return n==null?'—':Math.round(Number(n)).toLocaleString('es-AR');}
-function pct(n){return n==null?'—':(Number(n)*100).toFixed(2)+'%';}
-function shortName(n){return n.length>35?n.substring(0,33)+'…':n;}
+function curr(n){return'$'+Number(n||0).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function num(n){return Math.round(Number(n||0)).toLocaleString('es-AR');}
+function pct(n){return(Number(n||0)*100).toFixed(2)+'%';}
+function shortName(n,len=45){return n.length>len?n.substring(0,len-2)+'…':n;}
 
 function getFacultad(name){
   const n=name.toLowerCase();
-  for(const f of FACULTADES){
-    if(f.match.some(m=>n.includes(m))) return f.key;
-  }
+  for(const f of FACULTADES){if(f.match.some(m=>n.includes(m)))return f.key;}
   return null;
 }
-
 function getCampaignType(name){
   const n=name.toUpperCase();
-  if(n.includes('PMAX')||n.includes('PERFORMANCE MAX')) return 'pmax';
-  if(n.includes('SEARCH')) return 'search';
-  if(n.includes('VIDEO')||n.includes('YOUTUBE')||n.includes('YT')) return 'video';
-  return 'other';
+  if(n.includes('PMAX')||n.includes('PERFORMANCE MAX'))return'pmax';
+  if(n.includes('SEARCH'))return'search';
+  if(n.includes('VIDEO')||n.includes('YOUTUBE')||n.includes('YT'))return'video';
+  return'other';
 }
-
 function getName(r){return r.campaign?.name||r.adGroup?.name||'—';}
 function getStatus(r){return r.campaign?.status||r.adGroup?.status||'—';}
 
 async function connectAds(){
   const c=document.getElementById('customerInput').value.trim().replace(/-/g,'');
   if(!c){document.getElementById('errMsg').textContent='Ingresá el Customer ID.';return;}
-  CUSTOMER_ID=c;document.getElementById('errMsg').textContent='';
-  await loadData();
+  CUSTOMER_ID=c;document.getElementById('errMsg').textContent='';await loadData();
 }
 
 async function loadData(){
@@ -293,27 +322,22 @@ async function loadData(){
   const until=document.getElementById('dateTo').value;
   const st=document.getElementById('connStatus');
   st.textContent='Cargando...';st.className='status-bar';
-
   try{
     const r=await fetch(`${PROXY}?customer_id=${CUSTOMER_ID}&level=${currentLevel}&since=${since}&until=${until}`);
     const text=await r.text();
     if(text.includes('Clic aquí')||text.includes('authoriz')){
       const authUrl=`${APPS_SCRIPT}?customer_id=${CUSTOMER_ID}&level=${currentLevel}&since=${since}&until=${until}`;
-      document.getElementById('errMsg').innerHTML=`<span style="color:#ff3b30">Necesitás autorizar. <a href="${authUrl}" target="_blank">Clic aquí</a> y volvé a intentar.</span>`;
+      document.getElementById('errMsg').innerHTML=`<span>Necesitás autorizar. <a href="${authUrl}" target="_blank">Clic aquí</a> y volvé a intentar.</span>`;
       st.textContent='Sin autorización';st.className='status-bar status-warn';return;
     }
     const d=JSON.parse(text);
-    if(d.error){document.getElementById('errMsg').innerHTML=`<span style="color:#ff3b30">Error: ${d.error}</span>`;st.textContent='Error';st.className='status-bar status-err';return;}
+    if(d.error){document.getElementById('errMsg').innerHTML=`<span>Error: ${d.error}</span>`;st.textContent='Error';st.className='status-bar status-err';return;}
     allRows=d.results||[];allGeoRows=d.geoRows||[];
-    renderKPIs(allRows);
-    populateCountryFilters();
-    renderPivotTables();
-    renderCampaignTables();
+    renderKPIs(allRows);populateCountryFilters();renderPivotTables();renderCampaignTables();
     st.textContent='✓ Conectado';st.className='status-bar status-ok';
     document.getElementById('connectPanel').style.display='none';
   }catch(e){
-    document.getElementById('errMsg').innerHTML=`<span style="color:#ff3b30">Error: ${e.message}</span>`;
-    st.textContent='Error';st.className='status-bar status-err';
+    document.getElementById('errMsg').innerHTML=`<span>Error: ${e.message}</span>`;st.textContent='Error';st.className='status-bar status-err';
   }
 }
 
@@ -332,225 +356,124 @@ function renderKPIs(rows){
 
 // --- PIVOT TABLES ---
 function buildPivotData(){
-  // Agrupar geoRows por facultad y país
   const countries=new Set();
-  const data={}; // data[facultadKey][campResourceName][country] = {spend, conv}
-
+  const data={};
   allGeoRows.forEach(g=>{
-    const campName=g.campaign.name;
-    const campResource=g.campaign.resourceName;
-    const fKey=getFacultad(campName);
-    if(!fKey) return;
-    const country=g.country;
-    countries.add(country);
+    const fKey=getFacultad(g.campaign.name);if(!fKey)return;
+    const country=g.country;countries.add(country);
     const m=g.metrics||{};
-    const spend=Number(m.costMicros||0)/1e6;
-    const conv=Number(m.conversions||0);
-    if(!data[fKey]) data[fKey]={};
-    if(!data[fKey][campResource]) data[fKey][campResource]={name:campName,countries:{}};
-    if(!data[fKey][campResource].countries[country]) data[fKey][campResource].countries[country]={spend:0,conv:0};
-    data[fKey][campResource].countries[country].spend+=spend;
-    data[fKey][campResource].countries[country].conv+=conv;
+    const spend=Number(m.costMicros||0)/1e6;const conv=Number(m.conversions||0);
+    if(!data[fKey])data[fKey]={};
+    if(!data[fKey][g.campaign.resourceName])data[fKey][g.campaign.resourceName]={name:g.campaign.name,countries:{}};
+    if(!data[fKey][g.campaign.resourceName].countries[country])data[fKey][g.campaign.resourceName].countries[country]={spend:0,conv:0};
+    data[fKey][g.campaign.resourceName].countries[country].spend+=spend;
+    data[fKey][g.campaign.resourceName].countries[country].conv+=conv;
   });
-
-  // También agregar campañas sin geo (ARG puras)
   allRows.forEach(r=>{
-    const campName=getName(r);
-    const campResource=r.campaign?.resourceName||'';
-    const fKey=getFacultad(campName);
-    if(!fKey) return;
-    const hasGeo=allGeoRows.some(g=>g.campaign.resourceName===campResource);
-    if(hasGeo) return;
+    const campName=getName(r);const campRes=r.campaign?.resourceName||'';
+    const fKey=getFacultad(campName);if(!fKey)return;
+    if(allGeoRows.some(g=>g.campaign.resourceName===campRes))return;
     const m=r.metrics||{};
-    const spend=Number(m.costMicros||0)/1e6;
-    const conv=Number(m.conversions||0);
-    const country=r.countries||'Argentina';
-    countries.add(country);
-    if(!data[fKey]) data[fKey]={};
-    if(!data[fKey][campResource]) data[fKey][campResource]={name:campName,countries:{}};
-    if(!data[fKey][campResource].countries[country]) data[fKey][campResource].countries[country]={spend:0,conv:0};
-    data[fKey][campResource].countries[country].spend+=spend;
-    data[fKey][campResource].countries[country].conv+=conv;
+    const spend=Number(m.costMicros||0)/1e6;const conv=Number(m.conversions||0);
+    const country=r.countries||'Argentina';countries.add(country);
+    if(!data[fKey])data[fKey]={};
+    if(!data[fKey][campRes])data[fKey][campRes]={name:campName,countries:{}};
+    if(!data[fKey][campRes].countries[country])data[fKey][campRes].countries[country]={spend:0,conv:0};
+    data[fKey][campRes].countries[country].spend+=spend;
+    data[fKey][campRes].countries[country].conv+=conv;
   });
-
-  const sortedCountries=[...countries].sort();
-  return {data, countries:sortedCountries};
+  return{data,countries:[...countries].sort()};
 }
 
 function renderPivotTables(){
-  const {data, countries}=buildPivotData();
-
+  const{data,countries}=buildPivotData();
   ['Inversion','Leads','CPL'].forEach(type=>{
     const head=document.getElementById(`head${type}`);
     const body=document.getElementById(`body${type}`);
     head.innerHTML='<th>Facultad</th>'+countries.map(c=>`<th>${c}</th>`).join('')+'<th>Total</th>';
     body.innerHTML='';
 
-    let grandTotal={};countries.forEach(c=>grandTotal[c]=0);let grandTotalVal=0;
-    const groupTotals=[];
-
     GRUPOS.forEach(grupo=>{
-      let groupTotal={};countries.forEach(c=>groupTotal[c]=0);let groupTotalVal=0;
+      let gSpend={},gConv={};countries.forEach(c=>{gSpend[c]=0;gConv[c]=0;});
 
       grupo.keys.forEach(fKey=>{
-        const fDef=FACULTADES.find(f=>f.key===fKey);
-        if(!fDef) return;
-        const fData=data[fKey]||{};
-        const camps=Object.values(fData);
-        if(camps.length===0) return;
+        const fDef=FACULTADES.find(f=>f.key===fKey);if(!fDef)return;
+        const fData=data[fKey]||{};const camps=Object.values(fData);if(!camps.length)return;
+        let fSpend={},fConv={};countries.forEach(c=>{fSpend[c]=0;fConv[c]=0;});
+        camps.forEach(camp=>{countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};fSpend[c]+=v.spend;fConv[c]+=v.conv;});});
+        countries.forEach(c=>{gSpend[c]+=fSpend[c];gConv[c]+=fConv[c];});
 
-        // Totales de facultad
-        let facTotal={};countries.forEach(c=>facTotal[c]=0);let facTotalVal=0;
-        camps.forEach(camp=>{
-          countries.forEach(c=>{
-            const v=camp.countries[c]||{spend:0,conv:0};
-            const val=type==='Inversion'?v.spend:type==='Leads'?v.conv:(v.conv>0?v.spend/v.conv:0);
-            if(type!=='CPL') facTotal[c]+=val;
-            else if(v.conv>0){facTotal[c]=(facTotal[c]||0)+v.spend;} // acumular spend para CPL
-          });
-        });
-
-        // Para CPL calcular correctamente
-        if(type==='CPL'){
-          let facSpend={};let facConv={};
-          countries.forEach(c=>{facSpend[c]=0;facConv[c]=0;});
-          camps.forEach(camp=>{
-            countries.forEach(c=>{
-              const v=camp.countries[c]||{spend:0,conv:0};
-              facSpend[c]+=v.spend;facConv[c]+=v.conv;
-            });
-          });
-          countries.forEach(c=>{facTotal[c]=facConv[c]>0?facSpend[c]/facConv[c]:0;});
-        }
-
-        facTotalVal=countries.reduce((s,c)=>{
-          if(type==='Inversion') return s+facTotal[c];
-          if(type==='Leads') return s+facTotal[c];
-          return 0;
-        },0);
-
-        // Fila facultad (expandible)
         const rowId=`fac_${type}_${fKey}`;
         const tr=document.createElement('tr');
-        tr.className='faculty-row';
-        tr.id=rowId;
-        tr.onclick=()=>toggleFacultad(fKey,type,camps,countries,rowId);
-        let facTotalDisplay='';
-        if(type==='Inversion') facTotalDisplay=curr(countries.reduce((s,c)=>s+facTotal[c],0));
-        else if(type==='Leads') facTotalDisplay=countries.reduce((s,c)=>s+facTotal[c],0).toFixed(1);
-        else{
-          let ts=0,tc=0;
-          camps.forEach(camp=>{countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};ts+=v.spend;tc+=v.conv;});});
-          facTotalDisplay=tc>0?curr(ts/tc):'—';
-        }
+        tr.className='faculty-row';tr.id=rowId;
+        tr.dataset.expanded='0';
+        tr.onclick=()=>togglePivotFacultad(fKey,type,camps,countries,rowId);
+
+        const totS=countries.reduce((s,c)=>s+fSpend[c],0);
+        const totC=countries.reduce((s,c)=>s+fConv[c],0);
+        let totalCell=type==='Inversion'?curr(totS):type==='Leads'?totC.toFixed(1):totC>0?curr(totS/totC):'—';
 
         tr.innerHTML=`<td><span class="expand-icon">▶</span>${fDef.label}</td>`+
           countries.map(c=>{
-            if(type==='Inversion') return `<td>${curr(facTotal[c])}</td>`;
-            if(type==='Leads') return `<td>${facTotal[c].toFixed(1)}</td>`;
-            return `<td>${facTotal[c]>0?curr(facTotal[c]):'—'}</td>`;
-          }).join('')+`<td>${facTotalDisplay}</td>`;
+            if(type==='Inversion')return`<td>${fSpend[c]>0?curr(fSpend[c]):'—'}</td>`;
+            if(type==='Leads')return`<td>${fConv[c]>0?fConv[c].toFixed(1):'—'}</td>`;
+            return`<td>${fConv[c]>0?curr(fSpend[c]/fConv[c]):'—'}</td>`;
+          }).join('')+`<td>${totalCell}</td>`;
         body.appendChild(tr);
-
-        // Acumular para subtotal
-        countries.forEach(c=>{
-          if(type!=='CPL'){groupTotal[c]+=facTotal[c];grandTotal[c]+=facTotal[c];}
-        });
       });
 
-      // Subtotal grupo
-      let groupSpend={};let groupConv={};
-      countries.forEach(c=>{groupSpend[c]=0;groupConv[c]=0;});
-      grupo.keys.forEach(fKey=>{
-        const fData=data[fKey]||{};
-        Object.values(fData).forEach(camp=>{
-          countries.forEach(c=>{
-            const v=camp.countries[c]||{spend:0,conv:0};
-            groupSpend[c]+=v.spend;groupConv[c]+=v.conv;
-          });
-        });
-      });
-
-      const subTr=document.createElement('tr');
-      subTr.className='subtotal-row';
-      let subTotal='';
-      if(type==='Inversion'){subTotal=curr(countries.reduce((s,c)=>s+groupSpend[c],0));}
-      else if(type==='Leads'){subTotal=countries.reduce((s,c)=>s+groupConv[c],0).toFixed(1);}
-      else{const ts=countries.reduce((s,c)=>s+groupSpend[c],0);const tc=countries.reduce((s,c)=>s+groupConv[c],0);subTotal=tc>0?curr(ts/tc):'—';}
-
+      const stotS=countries.reduce((s,c)=>s+gSpend[c],0);
+      const stotC=countries.reduce((s,c)=>s+gConv[c],0);
+      let stotCell=type==='Inversion'?curr(stotS):type==='Leads'?stotC.toFixed(1):stotC>0?curr(stotS/stotC):'—';
+      const subTr=document.createElement('tr');subTr.className='subtotal-row';
       subTr.innerHTML=`<td>TOTAL ${grupo.label}</td>`+
         countries.map(c=>{
-          if(type==='Inversion') return `<td>${curr(groupSpend[c])}</td>`;
-          if(type==='Leads') return `<td>${groupConv[c].toFixed(1)}</td>`;
-          return `<td>${groupConv[c]>0?curr(groupSpend[c]/groupConv[c]):'—'}</td>`;
-        }).join('')+`<td>${subTotal}</td>`;
+          if(type==='Inversion')return`<td>${curr(gSpend[c])}</td>`;
+          if(type==='Leads')return`<td>${gConv[c].toFixed(1)}</td>`;
+          return`<td>${gConv[c]>0?curr(gSpend[c]/gConv[c]):'—'}</td>`;
+        }).join('')+`<td>${stotCell}</td>`;
       body.appendChild(subTr);
     });
 
-    // Total general
-    let allSpend={};let allConv={};
-    countries.forEach(c=>{allSpend[c]=0;allConv[c]=0;});
-    FACULTADES.forEach(f=>{
-      const fData=data[f.key]||{};
-      Object.values(fData).forEach(camp=>{
-        countries.forEach(c=>{
-          const v=camp.countries[c]||{spend:0,conv:0};
-          allSpend[c]+=v.spend;allConv[c]+=v.conv;
-        });
-      });
-    });
-
-    const totalTr=document.createElement('tr');
-    totalTr.className='total-row';
-    let totalVal='';
-    if(type==='Inversion'){totalVal=curr(countries.reduce((s,c)=>s+allSpend[c],0));}
-    else if(type==='Leads'){totalVal=countries.reduce((s,c)=>s+allConv[c],0).toFixed(1);}
-    else{const ts=countries.reduce((s,c)=>s+allSpend[c],0);const tc=countries.reduce((s,c)=>s+allConv[c],0);totalVal=tc>0?curr(ts/tc):'—';}
-
-    totalTr.innerHTML=`<td>TOTAL INVERSIÓN</td>`+
+    let allS={},allC={};countries.forEach(c=>{allS[c]=0;allC[c]=0;});
+    FACULTADES.forEach(f=>{const fData=data[f.key]||{};Object.values(fData).forEach(camp=>{countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};allS[c]+=v.spend;allC[c]+=v.conv;});});});
+    const gtS=countries.reduce((s,c)=>s+allS[c],0);const gtC=countries.reduce((s,c)=>s+allC[c],0);
+    let gtCell=type==='Inversion'?curr(gtS):type==='Leads'?gtC.toFixed(1):gtC>0?curr(gtS/gtC):'—';
+    const totalTr=document.createElement('tr');totalTr.className='total-row';
+    const totalLabel=type==='Inversion'?'TOTAL INVERSIÓN':type==='Leads'?'TOTAL LEADS':'TOTAL COSTO POR LEAD';
+    totalTr.innerHTML=`<td>${totalLabel}</td>`+
       countries.map(c=>{
-        if(type==='Inversion') return `<td>${curr(allSpend[c])}</td>`;
-        if(type==='Leads') return `<td>${allConv[c].toFixed(1)}</td>`;
-        return `<td>${allConv[c]>0?curr(allSpend[c]/allConv[c]):'—'}</td>`;
-      }).join('')+`<td>${totalVal}</td>`;
+        if(type==='Inversion')return`<td>${curr(allS[c])}</td>`;
+        if(type==='Leads')return`<td>${allC[c].toFixed(1)}</td>`;
+        return`<td>${allC[c]>0?curr(allS[c]/allC[c]):'—'}</td>`;
+      }).join('')+`<td>${gtCell}</td>`;
     body.appendChild(totalTr);
   });
 }
 
-function toggleFacultad(fKey, type, camps, countries, rowId){
+function togglePivotFacultad(fKey,type,camps,countries,rowId){
   const row=document.getElementById(rowId);
-  const isExpanded=row.classList.contains('expanded');
+  const isExp=row.dataset.expanded==='1';
+  row.dataset.expanded=isExp?'0':'1';
   row.classList.toggle('expanded');
-
-  // Eliminar filas existentes de campañas
-  const existing=document.querySelectorAll(`.camp-detail-${type}-${fKey}`);
-  existing.forEach(e=>e.remove());
-
-  if(!isExpanded){
+  document.querySelectorAll(`.pivot-camp-${type}-${fKey}`).forEach(e=>e.remove());
+  if(!isExp){
+    let insertAfter=row;
     camps.forEach(camp=>{
-      let campSpend={};let campConv={};
-      countries.forEach(c=>{campSpend[c]=0;campConv[c]=0;});
-      countries.forEach(c=>{
-        const v=camp.countries[c]||{spend:0,conv:0};
-        campSpend[c]=v.spend;campConv[c]=v.conv;
-      });
-
+      let cS={},cC={};countries.forEach(c=>{cS[c]=0;cC[c]=0;});
+      countries.forEach(c=>{const v=camp.countries[c]||{spend:0,conv:0};cS[c]=v.spend;cC[c]=v.conv;});
+      const totS=countries.reduce((s,c)=>s+cS[c],0);const totC=countries.reduce((s,c)=>s+cC[c],0);
+      let totCell=type==='Inversion'?curr(totS):type==='Leads'?totC.toFixed(1):totC>0?curr(totS/totC):'—';
       const campTr=document.createElement('tr');
-      campTr.className=`camp-row camp-detail-${type}-${fKey}`;
-      let campTotal='';
-      const ts=countries.reduce((s,c)=>s+campSpend[c],0);
-      const tc=countries.reduce((s,c)=>s+campConv[c],0);
-      if(type==='Inversion') campTotal=curr(ts);
-      else if(type==='Leads') campTotal=tc.toFixed(1);
-      else campTotal=tc>0?curr(ts/tc):'—';
-
-      campTr.innerHTML=`<td title="${camp.name}">${camp.name.length>40?camp.name.substring(0,38)+'…':camp.name}</td>`+
+      campTr.className=`camp-row pivot-camp-${type}-${fKey}`;
+      campTr.innerHTML=`<td title="${camp.name}">${shortName(camp.name)}</td>`+
         countries.map(c=>{
-          if(type==='Inversion') return `<td>${campSpend[c]>0?curr(campSpend[c]):'—'}</td>`;
-          if(type==='Leads') return `<td>${campConv[c]>0?campConv[c].toFixed(1):'—'}</td>`;
-          return `<td>${campConv[c]>0?curr(campSpend[c]/campConv[c]):'—'}</td>`;
-        }).join('')+`<td>${campTotal}</td>`;
-      row.after(campTr);
+          if(type==='Inversion')return`<td>${cS[c]>0?curr(cS[c]):'—'}</td>`;
+          if(type==='Leads')return`<td>${cC[c]>0?cC[c].toFixed(1):'—'}</td>`;
+          return`<td>${cC[c]>0?curr(cS[c]/cC[c]):'—'}</td>`;
+        }).join('')+`<td>${totCell}</td>`;
+      insertAfter.after(campTr);
+      insertAfter=campTr;
     });
   }
 }
@@ -562,68 +485,11 @@ function populateCountryFilters(){
   allRows.forEach(r=>{if(r.countries&&r.countries!=='—')r.countries.split(', ').forEach(c=>allCountries.add(c.trim()));});
   const sorted=[...allCountries].sort();
   ['filterSearchCountry','filterPmaxCountry','filterVideoCountry'].forEach(id=>{
-    const sel=document.getElementById(id);
-    const cur=sel.value;
+    const sel=document.getElementById(id);const cur=sel.value;
     sel.innerHTML='<option value="">Todos los países</option>';
     sorted.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
     sel.value=cur;
   });
-}
-
-function renderExpandedRows(campaigns,geoRows,campFilter,countryFilter,isVideo){
-  let html='';
-  const cols=isVideo?8:7;
-  campaigns.forEach(camp=>{
-    const campName=getName(camp);
-    const campResourceName=camp.campaign?.resourceName||'';
-    if(campFilter&&!campName.toLowerCase().includes(campFilter)) return;
-    const geoForCamp=geoRows.filter(g=>g.campaign.resourceName===campResourceName);
-    if(geoForCamp.length>0){
-      const filtered=countryFilter?geoForCamp.filter(g=>g.country===countryFilter):geoForCamp;
-      if(filtered.length===0) return;
-      const status=getStatus(camp);
-      const statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
-      html+=`<tr style="background:#f0f4ff;font-weight:500">
-        <td title="${campName}">${campName}</td>
-        <td><span class="badge ${status}">${statusLabel}</span></td>
-        <td colspan="${cols-2}" style="color:#86868b;font-size:11px">${filtered.length} país${filtered.length!==1?'es':''}</td>
-      </tr>`;
-      filtered.forEach(g=>{
-        const m=g.metrics||{};
-        const spend=Number(m.costMicros||0)/1e6;
-        const imp=Number(m.impressions||0);
-        const clk=Number(m.clicks||0);
-        const conv=Number(m.conversions||0);
-        const ctr=imp?(clk/imp):0;
-        const cpm=imp?((spend/imp)*1000):0;
-        const cpp=conv?(spend/conv):0;
-        if(isVideo){
-          html+=`<tr style="background:#fafafa;font-size:11px"><td style="padding-left:2rem;text-align:left">↳ ${g.country}</td><td>—</td><td style="text-align:right">${g.country}</td><td style="text-align:right">${curr(spend)}</td><td style="text-align:right">${pct(ctr)}</td><td style="text-align:right">${curr(cpm)}</td><td style="text-align:right">${conv.toFixed(1)}</td><td style="text-align:right">${cpp?curr(cpp):'—'}</td></tr>`;
-        } else {
-          html+=`<tr style="background:#fafafa;font-size:11px"><td style="padding-left:2rem;text-align:left">↳ ${g.country}</td><td>—</td><td style="text-align:right">${g.country}</td><td style="text-align:right">${curr(spend)}</td><td style="text-align:right">${pct(ctr)}</td><td style="text-align:right">${conv.toFixed(1)}</td><td style="text-align:right">${cpp?curr(cpp):'—'}</td></tr>`;
-        }
-      });
-    } else {
-      if(countryFilter) return;
-      const m=camp.metrics||{};
-      const spend=Number(m.costMicros||0)/1e6;
-      const imp=Number(m.impressions||0);
-      const clk=Number(m.clicks||0);
-      const conv=Number(m.conversions||0);
-      const ctr=imp?(clk/imp):0;
-      const cpm=imp?((spend/imp)*1000):0;
-      const cpp=conv?(spend/conv):0;
-      const status=getStatus(camp);
-      const statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
-      const countries=camp.countries||'—';
-      if(isVideo){
-        html+=`<tr><td title="${campName}" style="text-align:left">${campName}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td style="text-align:right">${countries}</td><td style="text-align:right">${curr(spend)}</td><td style="text-align:right">${pct(ctr)}</td><td style="text-align:right">${curr(cpm)}</td><td style="text-align:right">${conv.toFixed(1)}</td><td style="text-align:right">${cpp?curr(cpp):'—'}</td></tr>`;
-      } else {
-        html+=`<tr><td title="${campName}" style="text-align:left">${campName}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td style="text-align:right">${countries}</td><td style="text-align:right">${curr(spend)}</td><td style="text-align:right">${pct(ctr)}</td><td style="text-align:right">${conv.toFixed(1)}</td><td style="text-align:right">${cpp?curr(cpp):'—'}</td></tr>`;
-      }
-    }
-  });
-  return html;
 }
 
 function renderCampaignTables(){
@@ -639,25 +505,125 @@ function renderCampaignTables(){
   const searchGeo=allGeoRows.filter(g=>g.campaign.channelType==='SEARCH');
   const pmaxGeo=allGeoRows.filter(g=>g.campaign.channelType==='PERFORMANCE_MAX');
   const videoGeo=allGeoRows.filter(g=>g.campaign.channelType==='VIDEO');
-  const sHtml=renderExpandedRows(search,searchGeo,fSC,fSCo,false);
-  document.getElementById('tableSearch').innerHTML=sHtml||'<tr><td colspan="7" style="text-align:center;padding:2rem;color:#86868b">Sin resultados.</td></tr>';
-  const pHtml=renderExpandedRows(pmax,pmaxGeo,fPC,fPCo,false);
-  document.getElementById('tablePmax').innerHTML=pHtml||'<tr><td colspan="7" style="text-align:center;padding:2rem;color:#86868b">Sin resultados.</td></tr>';
-  const vHtml=renderExpandedRows(video,videoGeo,fVC,fVCo,true);
-  document.getElementById('tableVideo').innerHTML=vHtml||'<tr><td colspan="8" style="text-align:center;padding:2rem;color:#86868b">Sin resultados.</td></tr>';
+
+  renderCampTable('tableSearch',search,searchGeo,fSC,fSCo,false,7);
+  renderCampTable('tablePmax',pmax,pmaxGeo,fPC,fPCo,false,7);
+  renderCampTable('tableVideo',video,videoGeo,fVC,fVCo,true,8);
+}
+
+function renderCampTable(tbodyId,campaigns,geoRows,campFilter,countryFilter,isVideo,cols){
+  const tbody=document.getElementById(tbodyId);
+  tbody.innerHTML='';
+  let hasRows=false;
+
+  campaigns.forEach(camp=>{
+    const campName=getName(camp);
+    const campRes=camp.campaign?.resourceName||'';
+    if(campFilter&&!campName.toLowerCase().includes(campFilter))return;
+    const geoForCamp=geoRows.filter(g=>g.campaign.resourceName===campRes);
+    const campKey=`${tbodyId}_${campRes}`;
+
+    if(geoForCamp.length>0){
+      const filtered=countryFilter?geoForCamp.filter(g=>g.country===countryFilter):geoForCamp;
+      if(!filtered.length)return;
+      hasRows=true;
+      const status=getStatus(camp);
+      const statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
+      const isExp=expandedCamp[campKey];
+
+      const headTr=document.createElement('tr');
+      headTr.className='camp-header-row';
+      headTr.style.cursor='pointer';
+      headTr.dataset.key=campKey;
+      headTr.onclick=()=>toggleCampDetail(campKey,filtered,isVideo,headTr);
+      headTr.innerHTML=`<td style="text-align:left"><span class="expand-icon${isExp?' expanded':''}" id="icon_${campKey}">▶</span>${shortName(campName)}</td>`+
+        `<td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td>`+
+        `<td colspan="${cols-2}" style="text-align:right;color:var(--up-gray);font-size:11px">${filtered.length} país${filtered.length!==1?'es':''}</td>`;
+      tbody.appendChild(headTr);
+
+      if(isExp){
+        filtered.forEach(g=>{
+          tbody.appendChild(buildGeoRow(g,isVideo,campKey));
+        });
+      }
+    } else {
+      if(countryFilter)return;
+      hasRows=true;
+      const m=camp.metrics||{};
+      const spend=Number(m.costMicros||0)/1e6;
+      const imp=Number(m.impressions||0);
+      const clk=Number(m.clicks||0);
+      const conv=Number(m.conversions||0);
+      const ctr=imp?(clk/imp):0;
+      const cpm=imp?((spend/imp)*1000):0;
+      const cpp=conv?(spend/conv):0;
+      const status=getStatus(camp);
+      const statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
+      const countries=camp.countries||'—';
+      const tr=document.createElement('tr');
+      if(isVideo){
+        tr.innerHTML=`<td style="text-align:left" title="${campName}">${shortName(campName)}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td>${countries}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${curr(cpm)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
+      } else {
+        tr.innerHTML=`<td style="text-align:left" title="${campName}">${shortName(campName)}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td>${countries}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
+      }
+      tbody.appendChild(tr);
+    }
+  });
+
+  if(!hasRows){
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td colspan="${cols}" class="center">Sin resultados.</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+function buildGeoRow(g,isVideo,campKey){
+  const m=g.metrics||{};
+  const spend=Number(m.costMicros||0)/1e6;
+  const imp=Number(m.impressions||0);
+  const clk=Number(m.clicks||0);
+  const conv=Number(m.conversions||0);
+  const ctr=imp?(clk/imp):0;
+  const cpm=imp?((spend/imp)*1000):0;
+  const cpp=conv?(spend/conv):0;
+  const tr=document.createElement('tr');
+  tr.className='geo-detail-row';
+  tr.dataset.campKey=campKey;
+  if(isVideo){
+    tr.innerHTML=`<td style="text-align:left">↳ ${g.country}</td><td>—</td><td>${g.country}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${curr(cpm)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
+  } else {
+    tr.innerHTML=`<td style="text-align:left">↳ ${g.country}</td><td>—</td><td>${g.country}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;
+  }
+  return tr;
+}
+
+function toggleCampDetail(campKey,filtered,isVideo,headTr){
+  const isExp=expandedCamp[campKey];
+  expandedCamp[campKey]=!isExp;
+  const icon=document.getElementById(`icon_${campKey}`);
+  if(icon)icon.classList.toggle('expanded');
+
+  // Remove existing geo rows
+  document.querySelectorAll(`[data-camp-key="${campKey}"]`).forEach(e=>e.remove());
+
+  if(!isExp){
+    let after=headTr;
+    filtered.forEach(g=>{
+      const row=buildGeoRow(g,isVideo,campKey);
+      after.after(row);after=row;
+    });
+  }
 }
 
 function switchPage(el,pageId){
   document.querySelectorAll('.page-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById(pageId).classList.add('active');
+  el.classList.add('active');document.getElementById(pageId).classList.add('active');
 }
 
 function switchLevel(el,level){
   document.querySelectorAll('.level-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  currentLevel=level;
+  el.classList.add('active');currentLevel=level;
   if(CUSTOMER_ID)loadData();
 }
 </script>
