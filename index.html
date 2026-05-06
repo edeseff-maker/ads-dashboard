@@ -127,6 +127,9 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 .REMOVED{background:#f3f4f6;color:#6b7280}
 
 .center{text-align:center!important;padding:2rem;color:var(--up-gray)}
+
+.cell-best{background:#d1fae5!important;font-weight:700;color:#065f46}
+.cell-worst{background:#fee2e2!important;font-weight:700;color:#991b1b}
 </style>
 </head>
 <body>
@@ -135,14 +138,14 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 <div class="header">
   <div class="header-title">
     <h1>Universidad de Palermo — Reporte de Performance</h1>
-    <p>Google Ads · Dashboard de campañas</p>
+    <p>Dashboard de campañas</p>
   </div>
   <img class="header-logo" src="https://www.palermo.edu/images/header/logo.png" alt="Logo UP" onerror="this.style.display='none'"/>
 </div>
 
 <div class="content">
 
-<div class="connect-panel" id="connectPanel">
+<div class="connect-panel" id="connectPanel" style="display:none">
   <h3>Conectar cuenta de Google Ads</h3>
   <p>Ingresá el Customer ID de la cuenta que querés ver.</p>
   <div class="input-row">
@@ -156,14 +159,35 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 <div class="config-bar">
   <label>Desde:</label><input type="date" id="dateFrom"/>
   <label>Hasta:</label><input type="date" id="dateTo"/>
-  <button class="btn btn-primary" onclick="loadData()">Actualizar</button>
+  <button class="btn btn-primary" onclick="loadData();reloadMetaIfActive()">Actualizar</button>
   <span class="status-bar" id="connStatus"></span>
 </div>
 
 <div class="kpi-grid">
-  <div class="kpi"><div class="kpi-label">Inversión total</div><div class="kpi-value" id="k-spend">—</div></div>
-  <div class="kpi"><div class="kpi-label">Conversiones</div><div class="kpi-value" id="k-conv">—</div></div>
-  <div class="kpi"><div class="kpi-label">Costo/conv.</div><div class="kpi-value" id="k-cpp">—</div></div>
+  <div class="kpi">
+    <div class="kpi-label">Inversión total</div>
+    <div class="kpi-value" id="k-spend">—</div>
+    <div style="font-size:11px;color:var(--up-gray);margin-top:4px">
+      <span style="color:#1e40af">●</span> GAds: <span id="k-spend-g">—</span> &nbsp;
+      <span style="color:#1565c0">●</span> Meta: <span id="k-spend-m">—</span>
+    </div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Leads / Conv.</div>
+    <div class="kpi-value" id="k-conv">—</div>
+    <div style="font-size:11px;color:var(--up-gray);margin-top:4px">
+      <span style="color:#1e40af">●</span> GAds: <span id="k-conv-g">—</span> &nbsp;
+      <span style="color:#1565c0">●</span> Meta: <span id="k-conv-m">—</span>
+    </div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Costo/lead</div>
+    <div class="kpi-value" id="k-cpp">—</div>
+    <div style="font-size:11px;color:var(--up-gray);margin-top:4px">
+      <span style="color:#1e40af">●</span> GAds: <span id="k-cpp-g">—</span> &nbsp;
+      <span style="color:#1565c0">●</span> Meta: <span id="k-cpp-m">—</span>
+    </div>
+  </div>
   <div class="kpi"><div class="kpi-label">Clics</div><div class="kpi-value" id="k-clicks">—</div></div>
   <div class="kpi"><div class="kpi-label">CTR</div><div class="kpi-value" id="k-ctr">—</div></div>
   <div class="kpi"><div class="kpi-label">CPC prom.</div><div class="kpi-value" id="k-cpc">—</div></div>
@@ -172,9 +196,9 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 
 <!-- Page tabs -->
 <div class="page-tabs">
-  <div class="page-tab active" onclick="switchPage(this,'pageResumen')">Google Ads | Resumen por Facultad</div>
-  <div class="page-tab" onclick="switchPage(this,'pageCampanas')">Google Ads | Detalle por Campaña</div>
-  <div class="page-tab" onclick="switchPage(this,'pageMeta');loadMetaData()">Meta Ads</div>
+  <div class="page-tab active" onclick="switchPage(this,'pageResumen')">Google Ads | Performance por Facultad</div>
+  <div class="page-tab" onclick="switchPage(this,'pageCampanas')">Google Ads | Performance por Campaña</div>
+  <div class="page-tab" onclick="switchPage(this,'pageMeta');loadMetaData()">Meta Ads | Performance por Campaña</div>
 </div>
 
 <!-- PAGE 1 -->
@@ -363,9 +387,7 @@ async function loadData(){
   }
 }
 
-function renderKPIs(rows){
-  let ts=0,ti=0,tc=0,tv=0;
-  rows.forEach(r=>{const m=r.metrics||{};ts+=Number(m.costMicros||0)/1e6;ti+=Number(m.impressions||0);tc+=Number(m.clicks||0);tv+=Number(m.conversions||0);});
+// renderKPIs moved to combined version;ts+=Number(m.costMicros||0)/1e6;ti+=Number(m.impressions||0);tc+=Number(m.clicks||0);tv+=Number(m.conversions||0);});
   document.getElementById('k-spend').textContent=curr(ts);
   
   document.getElementById('k-clicks').textContent=num(tc);
@@ -800,6 +822,137 @@ function toggleMetaGrupo(grupoKey, type, camps, countries, rowId){
       insertAfter = campTr;
     });
   }
+}
+
+
+// --- KPIs combinados Google + Meta ---
+let gadsKPI = {spend:0, conv:0, clicks:0, imp:0, ctr:0, cpc:0, cpm:0};
+let metaKPI = {spend:0, leads:0};
+
+function renderKPIs(rows){
+  let ts=0,ti=0,tc=0,tv=0;
+  rows.forEach(r=>{const m=r.metrics||{};ts+=Number(m.costMicros||0)/1e6;ti+=Number(m.impressions||0);tc+=Number(m.clicks||0);tv+=Number(m.conversions||0);});
+  gadsKPI = {spend:ts, conv:tv, clicks:tc, imp:ti};
+  updateCombinedKPIs();
+}
+
+function updateMetaKPIs(){
+  let ms=0, ml=0;
+  metaGeoData.forEach(r=>{
+    ms += Number(r.spend||0);
+    ml += getMetaLeads(r.actions);
+  });
+  metaKPI = {spend:ms, leads:ml};
+  updateCombinedKPIs();
+}
+
+function updateCombinedKPIs(){
+  const ts = gadsKPI.spend + metaKPI.spend;
+  const tv = gadsKPI.conv + metaKPI.leads;
+  const ti = gadsKPI.imp;
+  const tc = gadsKPI.clicks;
+  document.getElementById('k-spend').textContent = curr(ts);
+  document.getElementById('k-conv').textContent = tv.toFixed(0);
+  document.getElementById('k-cpp').textContent = tv>0?curr(ts/tv):'—';
+  document.getElementById('k-clicks').textContent = num(tc);
+  document.getElementById('k-ctr').textContent = ti?pct(tc/ti):'—';
+  document.getElementById('k-cpc').textContent = tc?curr(gadsKPI.spend/tc):'—';
+  document.getElementById('k-cpm').textContent = ti?curr(gadsKPI.spend/ti*1000):'—';
+  // Desglose
+  const sg = document.getElementById('k-spend-g');
+  const sm = document.getElementById('k-spend-m');
+  const cg = document.getElementById('k-conv-g');
+  const cm = document.getElementById('k-conv-m');
+  const cpg = document.getElementById('k-cpp-g');
+  const cpm2 = document.getElementById('k-cpp-m');
+  if(sg) sg.textContent = curr(gadsKPI.spend);
+  if(sm) sm.textContent = curr(metaKPI.spend);
+  if(cg) cg.textContent = gadsKPI.conv.toFixed(0);
+  if(cm) cm.textContent = metaKPI.leads.toFixed(0);
+  if(cpg) cpg.textContent = gadsKPI.conv>0?curr(gadsKPI.spend/gadsKPI.conv):'—';
+  if(cpm2) cpm2.textContent = metaKPI.leads>0?curr(metaKPI.spend/metaKPI.leads):'—';
+}
+
+function reloadMetaIfActive(){
+  metaLoaded = false;
+  const metaTab = document.getElementById('pageMeta');
+  if(metaTab && metaTab.classList.contains('active')){
+    loadMetaData();
+  }
+}
+
+// --- HIGHLIGHT de celdas en tablas pivot ---
+function highlightPivotTable(tbodyId, type){
+  const tbody = document.getElementById(tbodyId);
+  if(!tbody) return;
+  const rows = tbody.querySelectorAll('tr.faculty-row, tr.camp-row');
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if(cells.length < 2) return;
+    // Ignorar primera celda (nombre) y última (total)
+    const valueCells = Array.from(cells).slice(1, cells.length-1);
+    const values = valueCells.map(td => {
+      const t = td.textContent.replace(/[$,.]/g,'').replace('—','').trim();
+      return t ? parseFloat(t) : null;
+    }).filter(v => v !== null && v > 0);
+    if(!values.length) return;
+    const max = Math.max(...values);
+    const min = Math.min(...values);
+    valueCells.forEach(td => {
+      td.classList.remove('cell-best','cell-worst');
+      const t = td.textContent.replace(/[$,.]/g,'').replace('—','').trim();
+      if(!t) return;
+      const v = parseFloat(t);
+      if(type === 'Inversion' || type === 'Leads'){
+        if(v === max && v > 0) td.classList.add('cell-best');
+      } else { // CPL - menor es mejor
+        if(v === min && v > 0) td.classList.add('cell-best');
+      }
+    });
+  });
+}
+
+// Override renderPivotTables para agregar highlight
+const _origRenderPivot = renderPivotTables;
+function renderPivotTables(){
+  _origRenderPivot();
+  setTimeout(()=>{
+    highlightPivotTable('bodyInversion','Inversion');
+    highlightPivotTable('bodyLeads','Leads');
+    highlightPivotTable('bodyCPL','CPL');
+  }, 50);
+}
+
+// Override renderMetaTables para agregar highlight
+const _origRenderMeta = renderMetaTables;
+function renderMetaTables(){
+  _origRenderMeta();
+  updateMetaKPIs();
+  setTimeout(()=>{
+    highlightPivotTable('bodyMetaInversion','Inversion');
+    highlightPivotTable('bodyMetaLeads','Leads');
+    highlightPivotTable('bodyMetaCPL','CPL');
+  }, 50);
+}
+
+// Override togglePivotFacultad para re-aplicar highlight al expandir
+const _origToggle = togglePivotFacultad;
+function togglePivotFacultad(fKey,type,camps,countries,rowId){
+  _origToggle(fKey,type,camps,countries,rowId);
+  setTimeout(()=>{
+    const tbodyId = `body${type}`;
+    const t = type.replace('Meta','');
+    highlightPivotTable(tbodyId, t==='Inversion'?'Inversion':t==='Leads'?'Leads':'CPL');
+  }, 50);
+}
+
+const _origToggleMeta = toggleMetaGrupo;
+function toggleMetaGrupo(grupoKey,type,camps,countries,rowId){
+  _origToggleMeta(grupoKey,type,camps,countries,rowId);
+  setTimeout(()=>{
+    const t = type.replace('Meta','');
+    highlightPivotTable(`body${type}`, t==='Inversion'?'Inversion':t==='Leads'?'Leads':'CPL');
+  }, 50);
 }
 
 </script>
