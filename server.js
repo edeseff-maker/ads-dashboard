@@ -40,6 +40,7 @@ const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
   const path = parsed.pathname;
 
+  // Google Ads proxy
   if (path === '/' || path === '') {
     const { customer_id, level, since, until } = parsed.query;
     if (!customer_id) {
@@ -49,28 +50,35 @@ const server = http.createServer((req, res) => {
     }
     const APPS_SCRIPT = `https://script.google.com/macros/s/AKfycbxcowU_GWpXJX-_PN5dz0ERQ137w2P9D5JTV6NDZstUXLz2LDqoH0jmR3kZA044ak8/exec?customer_id=${customer_id}&level=${level||'campaign'}&since=${since}&until=${until}`;
     fetchUrl(APPS_SCRIPT, (err, data) => {
-      if (err) {
-        res.writeHead(500, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({ error: err.message }));
-        return;
-      }
+      if (err) { res.writeHead(500, {'Content-Type': 'application/json'}); res.end(JSON.stringify({ error: err.message })); return; }
       res.writeHead(200, {'Content-Type': 'application/json'});
       res.end(data);
     });
     return;
   }
 
+  // Meta Ads proxy - sin breakdown
   if (path === '/meta') {
     const { level, since, until } = parsed.query;
     const fields = 'spend,impressions,clicks,ctr,cpc,cpm,actions,cost_per_action_type';
     const nameField = level === 'campaign' ? 'campaign_name' : level === 'adset' ? 'adset_name' : 'ad_name';
     const metaUrl = `https://graph.facebook.com/v19.0/${META_ACCOUNT}/insights?level=${level||'campaign'}&fields=${nameField},${fields}&time_range={"since":"${since}","until":"${until}"}&limit=100&access_token=${META_TOKEN}`;
     fetchUrl(metaUrl, (err, data) => {
-      if (err) {
-        res.writeHead(500, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify({ error: err.message }));
-        return;
-      }
+      if (err) { res.writeHead(500, {'Content-Type': 'application/json'}); res.end(JSON.stringify({ error: err.message })); return; }
+      res.writeHead(200, {'Content-Type': 'application/json'});
+      res.end(data);
+    });
+    return;
+  }
+
+  // Meta Ads proxy - con breakdown por país
+  if (path === '/meta-geo') {
+    const { level, since, until } = parsed.query;
+    const fields = 'spend,impressions,clicks,ctr,cpc,cpm,actions,cost_per_action_type';
+    const nameField = level === 'campaign' ? 'campaign_name' : level === 'adset' ? 'adset_name' : 'ad_name';
+    const metaUrl = `https://graph.facebook.com/v19.0/${META_ACCOUNT}/insights?level=${level||'campaign'}&fields=${nameField},${fields}&breakdowns=country&time_range={"since":"${since}","until":"${until}"}&limit=500&access_token=${META_TOKEN}`;
+    fetchUrl(metaUrl, (err, data) => {
+      if (err) { res.writeHead(500, {'Content-Type': 'application/json'}); res.end(JSON.stringify({ error: err.message })); return; }
       res.writeHead(200, {'Content-Type': 'application/json'});
       res.end(data);
     });
