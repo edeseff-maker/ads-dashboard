@@ -358,12 +358,12 @@ function getStatus(r){return r.campaign?.status||r.adGroup?.status||'—';}
 
 async function connectAds(){
   const c=document.getElementById('customerInput').value.trim().replace(/-/g,'');
-  if(!c){document.getElementById('errMsg').textContent='Ingresá el Customer ID.';return;}
+  if(!c){console.log('Sin customer ID');return;}
   CUSTOMER_ID=c;document.getElementById('errMsg').textContent='';await loadData();
 }
 
 async function loadData(){
-  if(!CUSTOMER_ID){document.getElementById('errMsg').textContent='Ingresá el Customer ID primero.';return;}
+  if(!CUSTOMER_ID){console.log('Sin customer ID');return;}
   const since=document.getElementById('dateFrom').value;
   const until=document.getElementById('dateTo').value;
   const st=document.getElementById('connStatus');
@@ -373,17 +373,17 @@ async function loadData(){
     const text=await r.text();
     if(text.includes('Clic aquí')||text.includes('authoriz')){
       const authUrl=`${APPS_SCRIPT}?customer_id=${CUSTOMER_ID}&level=${currentLevel}&since=${since}&until=${until}`;
-      document.getElementById('errMsg').innerHTML=`<span>Necesitás autorizar. <a href="${authUrl}" target="_blank">Clic aquí</a> y volvé a intentar.</span>`;
+      console.error('<span>Necesitás autorizar. <a href="${authUrl}" target="_blank">Clic aquí</a> y volvé a intentar.</span>');
       st.textContent='Sin autorización';st.className='status-bar status-warn';return;
     }
     const d=JSON.parse(text);
-    if(d.error){document.getElementById('errMsg').innerHTML=`<span>Error: ${d.error}</span>`;st.textContent='Error';st.className='status-bar status-err';return;}
+    if(d.error){console.error('<span>Error: ${d.error}</span>');st.textContent='Error';st.className='status-bar status-err';return;}
     allRows=d.results||[];allGeoRows=d.geoRows||[];
     renderKPIs(allRows);populateCountryFilters();renderPivotTables();renderCampaignTables();
     st.textContent='✓ Conectado';st.className='status-bar status-ok';
     document.getElementById('connectPanel').style.display='none';
   }catch(e){
-    document.getElementById('errMsg').innerHTML=`<span>Error: ${e.message}</span>`;st.textContent='Error';st.className='status-bar status-err';
+    console.error('<span>Error: ${e.message}</span>');st.textContent='Error';st.className='status-bar status-err';
   }
 }
 
