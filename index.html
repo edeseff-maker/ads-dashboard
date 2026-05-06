@@ -174,6 +174,7 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 <div class="page-tabs">
   <div class="page-tab active" onclick="switchPage(this,'pageResumen')">Google Ads | Resumen por Facultad</div>
   <div class="page-tab" onclick="switchPage(this,'pageCampanas')">Google Ads | Detalle por Campaña</div>
+  <div class="page-tab" onclick="switchPage(this,'pageMeta');loadMetaData()">Meta Ads</div>
 </div>
 
 <!-- PAGE 1 -->
@@ -259,6 +260,27 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
   </div>
 
 </div>
+
+<!-- PAGE 3: Meta Ads -->
+<div class="page" id="pageMeta">
+
+  <div class="section">
+    <div class="section-header"><h2>Inversión por tipo de campaña</h2></div>
+    <div class="pivot-table-wrap"><table id="tableMetaInversion"><thead><tr id="headMetaInversion"></tr></thead><tbody id="bodyMetaInversion"></tbody></table></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>Leads por tipo de campaña</h2></div>
+    <div class="pivot-table-wrap"><table id="tableMetaLeads"><thead><tr id="headMetaLeads"></tr></thead><tbody id="bodyMetaLeads"></tbody></table></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><h2>Costo por Lead por tipo de campaña</h2></div>
+    <div class="pivot-table-wrap"><table id="tableMetaCPL"><thead><tr id="headMetaCPL"></tr></thead><tbody id="bodyMetaCPL"></tbody></table></div>
+  </div>
+
+</div>
+
 </div><!-- end content -->
 
 <script>
@@ -626,6 +648,160 @@ function switchLevel(el,level){
   el.classList.add('active');currentLevel=level;
   if(CUSTOMER_ID)loadData();
 }
+
+// --- META ADS ---
+const META_GRUPOS = [
+  {key:'leads', label:'Leads (Meta)', match:['leads']},
+  {key:'trafico', label:'Tráfico', match:['tráfico','trafico']},
+  {key:'conversaciones', label:'Conversaciones (WhatsApp)', match:['conversaciones','whatsapp']},
+];
+
+let metaLoaded = false;
+let metaGeoData = [];
+
+function getMetaTipo(name){
+  const n = name.toLowerCase();
+  for(const g of META_GRUPOS){ if(g.match.some(m=>n.includes(m))) return g.key; }
+  return 'otros';
+}
+
+function getMetaLeads(actions){
+  if(!actions) return 0;
+  const a = actions.find(x=>x.action_type==='lead'||x.action_type==='offsite_conversion.fb_pixel_lead');
+  return a ? Number(a.value) : 0;
+}
+
+async function loadMetaData(){
+  if(metaLoaded) return;
+  const since = document.getElementById('dateFrom').value;
+  const until = document.getElementById('dateTo').value;
+  try {
+    const r = await fetch(`${PROXY}/meta-geo?level=campaign&since=${since}&until=${until}`);
+    const d = await r.json();
+    metaGeoData = d.data || [];
+    metaLoaded = true;
+    renderMetaTables();
+  } catch(e) {
+    console.error('Error Meta:', e);
+  }
+}
+
+function buildMetaPivotData(){
+  const countries = new Set();
+  const data = {}; // data[tipoKey][campName][country] = {spend, leads}
+
+  metaGeoData.forEach(r => {
+    const campName = r.campaign_name || '—';
+    const tipoKey = getMetaTipo(campName);
+    const country = r.country;
+    if(!country) return;
+    countries.add(country);
+    const spend = Number(r.spend || 0);
+    const leads = getMetaLeads(r.actions);
+    if(!data[tipoKey]) data[tipoKey] = {};
+    if(!data[tipoKey][campName]) data[tipoKey][campName] = {name: campName, countries: {}};
+    if(!data[tipoKey][campName].countries[country]) data[tipoKey][campName].countries[country] = {spend:0, leads:0};
+    data[tipoKey][campName].countries[country].spend += spend;
+    data[tipoKey][campName].countries[country].leads += leads;
+  });
+
+  return {data, countries: [...countries].sort()};
+}
+
+function renderMetaTables(){
+  const {data, countries} = buildMetaPivotData();
+
+  ['MetaInversion','MetaLeads','MetaCPL'].forEach(type => {
+    const shortType = type.replace('Meta','');
+    const head = document.getElementById(`head${type}`);
+    const body = document.getElementById(`body${type}`);
+    if(!head||!body) return;
+    head.innerHTML = '<th>Tipo de campaña</th>' + countries.map(c=>`<th>${c}</th>`).join('') + '<th>Total</th>';
+    body.innerHTML = '';
+
+    let allS={}, allL={};
+    countries.forEach(c=>{allS[c]=0;allL[c]=0;});
+
+    META_GRUPOS.forEach(grupo => {
+      const gData = data[grupo.key] || {};
+      const camps = Object.values(gData);
+      if(!camps.length) return;
+
+      let gS={}, gL={};
+      countries.forEach(c=>{gS[c]=0;gL[c]=0;});
+      camps.forEach(camp => {
+        countries.forEach(c => {
+          const v = camp.countries[c] || {spend:0,leads:0};
+          gS[c] += v.spend; gL[c] += v.leads;
+        });
+      });
+      countries.forEach(c=>{allS[c]+=gS[c];allL[c]+=gL[c];});
+
+      const totS = countries.reduce((s,c)=>s+gS[c],0);
+      const totL = countries.reduce((s,c)=>s+gL[c],0);
+      let totalCell = shortType==='Inversion'?curr(totS):shortType==='Leads'?totL.toFixed(0):totL>0?curr(totS/totL):'—';
+
+      const rowId = `meta_${type}_${grupo.key}`;
+      const tr = document.createElement('tr');
+      tr.className = 'faculty-row'; tr.id = rowId; tr.dataset.expanded='0';
+      tr.onclick = () => toggleMetaGrupo(grupo.key, type, camps, countries, rowId);
+      tr.innerHTML = `<td><span class="expand-icon">▶</span>${grupo.label}</td>` +
+        countries.map(c => {
+          if(shortType==='Inversion') return `<td>${gS[c]>0?curr(gS[c]):'—'}</td>`;
+          if(shortType==='Leads') return `<td>${gL[c]>0?gL[c].toFixed(0):'—'}</td>`;
+          return `<td>${gL[c]>0?curr(gS[c]/gL[c]):'—'}</td>`;
+        }).join('') + `<td>${totalCell}</td>`;
+      body.appendChild(tr);
+    });
+
+    const gtS = countries.reduce((s,c)=>s+allS[c],0);
+    const gtL = countries.reduce((s,c)=>s+allL[c],0);
+    let gtCell = shortType==='Inversion'?curr(gtS):shortType==='Leads'?gtL.toFixed(0):gtL>0?curr(gtS/gtL):'—';
+    const totalLabel = shortType==='Inversion'?'TOTAL INVERSIÓN':shortType==='Leads'?'TOTAL LEADS':'TOTAL COSTO POR LEAD';
+    const totalTr = document.createElement('tr');
+    totalTr.className = 'total-row';
+    totalTr.innerHTML = `<td>${totalLabel}</td>` +
+      countries.map(c => {
+        if(shortType==='Inversion') return `<td>${curr(allS[c])}</td>`;
+        if(shortType==='Leads') return `<td>${allL[c].toFixed(0)}</td>`;
+        return `<td>${allL[c]>0?curr(allS[c]/allL[c]):'—'}</td>`;
+      }).join('') + `<td>${gtCell}</td>`;
+    body.appendChild(totalTr);
+  });
+}
+
+function toggleMetaGrupo(grupoKey, type, camps, countries, rowId){
+  const row = document.getElementById(rowId);
+  const isExp = row.dataset.expanded === '1';
+  row.dataset.expanded = isExp ? '0' : '1';
+  row.classList.toggle('expanded');
+  document.querySelectorAll(`.meta-camp-${type}-${grupoKey}`).forEach(e=>e.remove());
+  if(!isExp){
+    let insertAfter = row;
+    camps.forEach(camp => {
+      let cS={}, cL={};
+      countries.forEach(c=>{
+        const v = camp.countries[c]||{spend:0,leads:0};
+        cS[c]=v.spend; cL[c]=v.leads;
+      });
+      const totS = countries.reduce((s,c)=>s+cS[c],0);
+      const totL = countries.reduce((s,c)=>s+cL[c],0);
+      const shortType = type.replace('Meta','');
+      let totCell = shortType==='Inversion'?curr(totS):shortType==='Leads'?totL.toFixed(0):totL>0?curr(totS/totL):'—';
+      const campTr = document.createElement('tr');
+      campTr.className = `camp-row meta-camp-${type}-${grupoKey}`;
+      campTr.innerHTML = `<td title="${camp.name}">${shortName(camp.name)}</td>` +
+        countries.map(c => {
+          if(shortType==='Inversion') return `<td>${cS[c]>0?curr(cS[c]):'—'}</td>`;
+          if(shortType==='Leads') return `<td>${cL[c]>0?cL[c].toFixed(0):'—'}</td>`;
+          return `<td>${cL[c]>0?curr(cS[c]/cL[c]):'—'}</td>`;
+        }).join('') + `<td>${totCell}</td>`;
+      insertAfter.after(campTr);
+      insertAfter = campTr;
+    });
+  }
+}
+
 </script>
 </body>
 </html>
