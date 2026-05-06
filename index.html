@@ -21,21 +21,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .config-bar label{font-size:13px;color:var(--up-gray);font-weight:500}
 .config-bar input[type=date]{font-size:13px;padding:5px 8px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-white);color:var(--up-text)}
 .config-bar select{font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-white);color:var(--up-text);font-weight:500}
-.btn{padding:7px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
+.btn{padding:7px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600}
 .btn-primary{background:var(--up-navy);color:var(--up-white)}
 .btn-primary:hover{background:#002244}
 .status-bar{font-size:12px;color:var(--up-gray)}
 .status-ok{color:var(--up-success);font-weight:600}
 .status-err{color:#dc2626;font-weight:600}
-.status-warn{color:var(--up-warning);font-weight:600}
-
-/* KPI Cards expandibles */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:1.5rem}
 .kpi{background:var(--up-white);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);border-top:3px solid var(--up-gold);overflow:hidden}
 .kpi-header{padding:.9rem 1.1rem;cursor:pointer;user-select:none}
 .kpi-header:hover{background:var(--up-light)}
-.kpi-label{font-size:11px;color:var(--up-gray);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;align-items:center}
-.kpi-toggle{font-size:10px;color:var(--up-gold);transition:transform .2s}
+.kpi-label{font-size:11px;color:var(--up-gray);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between}
+.kpi-toggle{color:var(--up-gold);transition:transform .2s;font-size:10px}
 .kpi.expanded .kpi-toggle{transform:rotate(180deg)}
 .kpi-value{font-size:22px;font-weight:700;color:var(--up-navy)}
 .kpi-breakdown{display:none;border-top:1px solid var(--up-light);padding:.6rem 1.1rem;background:var(--up-bg)}
@@ -43,32 +40,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .kpi-breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:12px}
 .kpi-breakdown-label{color:var(--up-gray);display:flex;align-items:center;gap:5px}
 .kpi-breakdown-value{font-weight:600;color:var(--up-navy)}
-.dot-gads{width:8px;height:8px;border-radius:50%;background:#1e40af;display:inline-block}
-.dot-meta{width:8px;height:8px;border-radius:50%;background:#0d47a1;display:inline-block}
-
-/* Page tabs */
+.dot-g{width:8px;height:8px;border-radius:50%;background:#1e40af;display:inline-block}
+.dot-m{width:8px;height:8px;border-radius:50%;background:#0d47a1;display:inline-block}
 .page-tabs{display:flex;gap:0;margin-bottom:1.5rem;background:var(--up-white);border-radius:12px;padding:4px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .page-tab{flex:1;padding:10px 16px;font-size:13px;cursor:pointer;color:var(--up-gray);border-radius:9px;text-align:center;font-weight:500;transition:all .15s}
 .page-tab.active{background:var(--up-navy);color:var(--up-white);font-weight:600}
 .page{display:none}
 .page.active{display:block}
-
-/* Sections */
 .section{background:var(--up-white);border-radius:12px;padding:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:1.25rem}
 .section-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2px solid var(--up-light)}
 .section-header h2{font-size:15px;font-weight:700;color:var(--up-navy)}
-.type-badge{font-size:11px;padding:3px 10px;border-radius:99px;font-weight:700}
-.search-badge{background:#dbeafe;color:#1e3a8a}
-.pmax-badge{background:#ede9fe;color:#4c1d95}
-.video-badge{background:#fce7f3;color:#831843}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem}
-.filters input,.filters select{font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--up-border);background:var(--up-bg);color:var(--up-text);min-width:160px}
-.level-tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:2px solid var(--up-border)}
-.level-tab{padding:8px 16px;font-size:13px;cursor:pointer;color:var(--up-gray);border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:500}
-.level-tab.active{color:var(--up-navy);border-bottom-color:var(--up-gold);font-weight:700}
-
-/* Tables */
-.table-wrap{overflow-x:auto}
 .pivot-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--up-border)}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead th{background:var(--up-navy);color:var(--up-white);padding:9px 12px;text-align:right;font-weight:600;white-space:nowrap}
@@ -85,16 +66,8 @@ tbody tr.camp-row td:first-child{padding-left:2.5rem}
 tbody tr.camp-row:hover td{background:var(--up-light)}
 tbody tr.subtotal-row td{font-weight:700;background:var(--up-light);color:var(--up-navy);border-top:2px solid var(--up-border)}
 tbody tr.total-row td{font-weight:700;background:var(--up-navy);color:var(--up-white)}
-tbody tr.camp-header-row td{font-weight:600;background:#eef2ff;color:var(--up-navy);cursor:pointer}
-tbody tr.geo-detail-row td{font-size:11px;color:#444;background:#fafafa}
-tbody tr.geo-detail-row td:first-child{padding-left:2.5rem}
-tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 .expand-icon{margin-right:6px;display:inline-block;transition:transform .2s;font-size:10px;color:var(--up-gold)}
 .expanded .expand-icon{transform:rotate(90deg)}
-.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600}
-.ENABLED{background:var(--up-success-bg);color:var(--up-success)}
-.PAUSED{background:var(--up-warning-bg);color:var(--up-warning)}
-.REMOVED{background:#f3f4f6;color:#6b7280}
 .center{text-align:center!important;padding:2rem;color:var(--up-gray)}
 .cell-best{background:#d1fae5!important;font-weight:700;color:#065f46!important}
 </style>
@@ -124,7 +97,6 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
   <span class="status-bar" id="connStatus"></span>
 </div>
 
-<!-- KPI Cards -->
 <div class="kpi-grid">
   <div class="kpi" id="kpi-spend">
     <div class="kpi-header" onclick="toggleKpi('kpi-spend')">
@@ -132,8 +104,8 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
       <div class="kpi-value" id="k-spend">—</div>
     </div>
     <div class="kpi-breakdown">
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-gads"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-spend-g">—</span></div>
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-meta"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-spend-m">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-g"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-spend-g">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-m"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-spend-m">—</span></div>
     </div>
   </div>
   <div class="kpi" id="kpi-conv">
@@ -142,8 +114,8 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
       <div class="kpi-value" id="k-conv">—</div>
     </div>
     <div class="kpi-breakdown">
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-gads"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-conv-g">—</span></div>
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-meta"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-conv-m">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-g"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-conv-g">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-m"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-conv-m">—</span></div>
     </div>
   </div>
   <div class="kpi" id="kpi-cpp">
@@ -152,8 +124,8 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
       <div class="kpi-value" id="k-cpp">—</div>
     </div>
     <div class="kpi-breakdown">
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-gads"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-cpp-g">—</span></div>
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-meta"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-cpp-m">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-g"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-cpp-g">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-m"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-cpp-m">—</span></div>
     </div>
   </div>
   <div class="kpi" id="kpi-clicks">
@@ -162,8 +134,8 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
       <div class="kpi-value" id="k-clicks">—</div>
     </div>
     <div class="kpi-breakdown">
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-gads"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-clicks-g">—</span></div>
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-meta"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-clicks-m">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-g"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-clicks-g">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-m"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-clicks-m">—</span></div>
     </div>
   </div>
   <div class="kpi" id="kpi-ctr">
@@ -172,8 +144,8 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
       <div class="kpi-value" id="k-ctr">—</div>
     </div>
     <div class="kpi-breakdown">
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-gads"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-ctr-g">—</span></div>
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-meta"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-ctr-m">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-g"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-ctr-g">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-m"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-ctr-m">—</span></div>
     </div>
   </div>
   <div class="kpi" id="kpi-cpc">
@@ -182,8 +154,8 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
       <div class="kpi-value" id="k-cpc">—</div>
     </div>
     <div class="kpi-breakdown">
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-gads"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-cpc-g">—</span></div>
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-meta"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-cpc-m">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-g"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-cpc-g">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-m"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-cpc-m">—</span></div>
     </div>
   </div>
   <div class="kpi" id="kpi-cpm">
@@ -192,8 +164,8 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
       <div class="kpi-value" id="k-cpm">—</div>
     </div>
     <div class="kpi-breakdown">
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-gads"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-cpm-g">—</span></div>
-      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-meta"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-cpm-m">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-g"></span>Google Ads</span><span class="kpi-breakdown-value" id="k-cpm-g">—</span></div>
+      <div class="kpi-breakdown-row"><span class="kpi-breakdown-label"><span class="dot-m"></span>Meta Ads</span><span class="kpi-breakdown-value" id="k-cpm-m">—</span></div>
     </div>
   </div>
 </div>
@@ -203,7 +175,7 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
   <div class="page-tab" onclick="switchPage(this,'pageMeta')">Meta Ads | Performance por Campaña</div>
 </div>
 
-<!-- PAGE 1 -->
+<!-- PAGE 1: Google Ads -->
 <div class="page active" id="pageResumen">
   <div class="section">
     <div class="section-header"><h2>Inversión por Facultad</h2></div>
@@ -219,7 +191,7 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
   </div>
 </div>
 
-<!-- PAGE 3 -->
+<!-- PAGE 2: Meta Ads -->
 <div class="page" id="pageMeta">
   <div class="section">
     <div class="section-header"><h2>Inversión por tipo de campaña</h2></div>
@@ -241,22 +213,18 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 const PROXY='https://ads-dashboard-production-d61d.up.railway.app';
 const CUSTOMER_ID='5028107265';
 let allRows=[],allGeoRows=[],metaGeoData=[];
-let currentLevel='campaign';
-const expandedCamp={};
 
-// Fechas por defecto
 (function(){applyQuickPeriod();})();
 
 function applyQuickPeriod(){
   const sel=document.getElementById('quickPeriod').value;
-  const to=new Date();
-  let from=new Date();
+  const to=new Date();let from=new Date();
   if(sel==='7'){from.setDate(to.getDate()-6);}
   else if(sel==='30'){from.setDate(to.getDate()-29);}
   else if(sel==='lastmonth'){
-    from=new Date(to.getFullYear(),to.getMonth()-1,1);
-    to.setDate(0);to.setMonth(to.getMonth());
-    const lastDay=new Date(new Date().getFullYear(),new Date().getMonth(),0);
+    const now=new Date();
+    from=new Date(now.getFullYear(),now.getMonth()-1,1);
+    const lastDay=new Date(now.getFullYear(),now.getMonth(),0);
     document.getElementById('dateFrom').value=from.toISOString().split('T')[0];
     document.getElementById('dateTo').value=lastDay.toISOString().split('T')[0];
     return;
@@ -265,18 +233,12 @@ function applyQuickPeriod(){
   document.getElementById('dateTo').value=to.toISOString().split('T')[0];
 }
 
-// Helpers
 function curr(n){return'$'+Number(n||0).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function num(n){return Math.round(Number(n||0)).toLocaleString('es-AR');}
 function pct(n){return(Number(n||0)*100).toFixed(2)+'%';}
 function shortName(n,len=45){return n.length>len?n.substring(0,len-2)+'…':n;}
+function toggleKpi(id){document.getElementById(id).classList.toggle('expanded');}
 
-// KPI toggle
-function toggleKpi(id){
-  document.getElementById(id).classList.toggle('expanded');
-}
-
-// Mapeos
 const FACULTADES=[
   {key:'ingenieria',label:'Ingeniería',match:['ingeniería','ingenieria']},
   {key:'derecho',label:'Derecho',match:['derecho']},
@@ -299,17 +261,10 @@ const META_GRUPOS=[
 ];
 
 function getFacultad(name){const n=name.toLowerCase();for(const f of FACULTADES){if(f.match.some(m=>n.includes(m)))return f.key;}return null;}
-function getCampaignType(name){const n=name.toUpperCase();if(n.includes('PMAX')||n.includes('PERFORMANCE MAX'))return'pmax';if(n.includes('SEARCH'))return'search';if(n.includes('VIDEO')||n.includes('YOUTUBE')||n.includes('YT'))return'video';return'other';}
 function getMetaTipo(name){const n=name.toLowerCase();for(const g of META_GRUPOS){if(g.match.some(m=>n.includes(m)))return g.key;}return'otros';}
 function getName(r){return r.campaign?.name||r.adGroup?.name||'—';}
-function getStatus(r){return r.campaign?.status||r.adGroup?.status||'—';}
 function getMetaLeads(actions){if(!actions)return 0;const a=actions.find(x=>x.action_type==='lead'||x.action_type==='offsite_conversion.fb_pixel_lead');return a?Number(a.value):0;}
-function getMetaClicks(r){return Number(r.clicks||0);}
-function getMetaCtr(r){return Number(r.ctr||0);}
-function getMetaCpc(r){return Number(r.cpc||0);}
-function getMetaCpm(r){return Number(r.cpm||0);}
 
-// Carga
 async function loadAll(){
   const since=document.getElementById('dateFrom').value;
   const until=document.getElementById('dateTo').value;
@@ -321,14 +276,14 @@ async function loadAll(){
 
 async function loadGads(since,until){
   try{
-    const r=await fetch(`${PROXY}?customer_id=${CUSTOMER_ID}&level=${currentLevel}&since=${since}&until=${until}`);
+    const r=await fetch(`${PROXY}?customer_id=${CUSTOMER_ID}&level=campaign&since=${since}&until=${until}`);
     const text=await r.text();
     if(text.includes('Clic aquí')||text.includes('authoriz')){document.getElementById('connStatus').textContent='Autorizar Google Ads';return;}
     const d=JSON.parse(text);
-    if(d.error){console.error('GAds error:',d.error);return;}
+    if(d.error){console.error('GAds:',d.error);return;}
     allRows=d.results||[];allGeoRows=d.geoRows||[];
-    updateGadsKPIs();populateCountryFilters();renderPivotTables();renderCampaignTables();
-  }catch(e){console.error('GAds fetch error:',e);}
+    updateGadsKPIs();renderPivotTables();
+  }catch(e){console.error('GAds:',e);}
 }
 
 async function loadMeta(since,until){
@@ -337,36 +292,31 @@ async function loadMeta(since,until){
     const d=await r.json();
     metaGeoData=d.data||[];
     updateMetaKPIs();renderMetaTables();
-  }catch(e){console.error('Meta error:',e);}
+  }catch(e){console.error('Meta:',e);}
 }
 
-// KPIs
-let gS=0,gC=0,gClk=0,gImp=0,gCtr=0,gCpc=0,gCpm=0;
-let mS=0,mL=0,mClk=0,mImp=0,mCtr=0,mCpc=0,mCpm=0;
+let gS=0,gC=0,gClk=0,gImp=0;
+let mS=0,mL=0,mClk=0,mImp=0;
 
 function updateGadsKPIs(){
   gS=0;gC=0;gClk=0;gImp=0;
   allRows.forEach(r=>{const m=r.metrics||{};gS+=Number(m.costMicros||0)/1e6;gImp+=Number(m.impressions||0);gClk+=Number(m.clicks||0);gC+=Number(m.conversions||0);});
-  gCtr=gImp?gClk/gImp:0;gCpc=gClk?gS/gClk:0;gCpm=gImp?gS/gImp*1000:0;
   renderKPIs();
 }
 function updateMetaKPIs(){
   mS=0;mL=0;mClk=0;mImp=0;
-  metaGeoData.forEach(r=>{mS+=Number(r.spend||0);mL+=getMetaLeads(r.actions);mClk+=getMetaClicks(r);mImp+=Number(r.impressions||0);});
-  mCtr=mImp?mClk/mImp:0;mCpc=mClk?mS/mClk:0;mCpm=mImp?mS/mImp*1000:0;
+  metaGeoData.forEach(r=>{mS+=Number(r.spend||0);mL+=getMetaLeads(r.actions);mClk+=Number(r.clicks||0);mImp+=Number(r.impressions||0);});
   renderKPIs();
 }
 function renderKPIs(){
   const ts=gS+mS,tv=gC+mL,tClk=gClk+mClk,tImp=gImp+mImp;
-  const tCtr=tImp?tClk/tImp:0,tCpc=tClk?ts/tClk:0,tCpm=tImp?ts/tImp*1000:0;
   document.getElementById('k-spend').textContent=curr(ts);
   document.getElementById('k-conv').textContent=tv.toFixed(0);
   document.getElementById('k-cpp').textContent=tv>0?curr(ts/tv):'—';
   document.getElementById('k-clicks').textContent=num(tClk);
-  document.getElementById('k-ctr').textContent=pct(tCtr);
-  document.getElementById('k-cpc').textContent=curr(tCpc);
-  document.getElementById('k-cpm').textContent=curr(tCpm);
-  // Desglose
+  document.getElementById('k-ctr').textContent=tImp?pct(tClk/tImp):'—';
+  document.getElementById('k-cpc').textContent=tClk?curr(ts/tClk):'—';
+  document.getElementById('k-cpm').textContent=tImp?curr(ts/tImp*1000):'—';
   document.getElementById('k-spend-g').textContent=curr(gS);
   document.getElementById('k-spend-m').textContent=curr(mS);
   document.getElementById('k-conv-g').textContent=gC.toFixed(0);
@@ -375,15 +325,14 @@ function renderKPIs(){
   document.getElementById('k-cpp-m').textContent=mL>0?curr(mS/mL):'—';
   document.getElementById('k-clicks-g').textContent=num(gClk);
   document.getElementById('k-clicks-m').textContent=num(mClk);
-  document.getElementById('k-ctr-g').textContent=pct(gCtr);
-  document.getElementById('k-ctr-m').textContent=pct(mCtr);
-  document.getElementById('k-cpc-g').textContent=curr(gCpc);
-  document.getElementById('k-cpc-m').textContent=curr(mCpc);
-  document.getElementById('k-cpm-g').textContent=curr(gCpm);
-  document.getElementById('k-cpm-m').textContent=curr(mCpm);
+  document.getElementById('k-ctr-g').textContent=gImp?pct(gClk/gImp):'—';
+  document.getElementById('k-ctr-m').textContent=mImp?pct(mClk/mImp):'—';
+  document.getElementById('k-cpc-g').textContent=gClk?curr(gS/gClk):'—';
+  document.getElementById('k-cpc-m').textContent=mClk?curr(mS/mClk):'—';
+  document.getElementById('k-cpm-g').textContent=gImp?curr(gS/gImp*1000):'—';
+  document.getElementById('k-cpm-m').textContent=mImp?curr(mS/mImp*1000):'—';
 }
 
-// Highlight
 function highlightRows(tbodyId,metricType){
   const tbody=document.getElementById(tbodyId);if(!tbody)return;
   tbody.querySelectorAll('tr.faculty-row,tr.camp-row').forEach(row=>{
@@ -400,7 +349,6 @@ function highlightRows(tbodyId,metricType){
   });
 }
 
-// Pivot Google Ads
 function buildPivotData(){
   const countries=new Set();const data={};
   allGeoRows.forEach(g=>{
@@ -487,7 +435,6 @@ function togglePivotFac(fKey,type,metric,camps,countries,rowId){
   }
 }
 
-// Meta Pivot
 function buildMetaPivotData(){
   const countries=new Set();const data={};
   metaGeoData.forEach(r=>{
@@ -555,101 +502,10 @@ function toggleMetaGrupo(grupoKey,type,metric,camps,countries,rowId){
   }
 }
 
-// Campaign tables
-function populateCountryFilters(){
-  const allCountries=new Set();
-  allGeoRows.forEach(r=>{if(r.country)allCountries.add(r.country);});
-  allRows.forEach(r=>{if(r.countries&&r.countries!=='—')r.countries.split(', ').forEach(c=>allCountries.add(c.trim()));});
-  const sorted=[...allCountries].sort();
-  ['filterSearchCountry','filterPmaxCountry','filterVideoCountry'].forEach(id=>{
-    const sel=document.getElementById(id);const cur=sel.value;
-    sel.innerHTML='<option value="">Todos los países</option>';
-    sorted.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
-    sel.value=cur;
-  });
-}
-
-function renderCampaignTables(){
-  const search=allRows.filter(r=>getCampaignType(getName(r))==='search');
-  const pmax=allRows.filter(r=>getCampaignType(getName(r))==='pmax');
-  const video=allRows.filter(r=>['video','other'].includes(getCampaignType(getName(r))));
-  const fSC=document.getElementById('filterSearchCampaign').value.toLowerCase();
-  const fSCo=document.getElementById('filterSearchCountry').value;
-  const fPC=document.getElementById('filterPmaxCampaign').value.toLowerCase();
-  const fPCo=document.getElementById('filterPmaxCountry').value;
-  const fVC=document.getElementById('filterVideoCampaign').value.toLowerCase();
-  const fVCo=document.getElementById('filterVideoCountry').value;
-  const searchGeo=allGeoRows.filter(g=>g.campaign.channelType==='SEARCH');
-  const pmaxGeo=allGeoRows.filter(g=>g.campaign.channelType==='PERFORMANCE_MAX');
-  const videoGeo=allGeoRows.filter(g=>g.campaign.channelType==='VIDEO');
-  renderCampTable('tableSearch',search,searchGeo,fSC,fSCo,false,7);
-  renderCampTable('tablePmax',pmax,pmaxGeo,fPC,fPCo,false,7);
-  renderCampTable('tableVideo',video,videoGeo,fVC,fVCo,true,8);
-}
-
-function renderCampTable(tbodyId,campaigns,geoRows,campFilter,countryFilter,isVideo,cols){
-  const tbody=document.getElementById(tbodyId);tbody.innerHTML='';let hasRows=false;
-  campaigns.forEach(camp=>{
-    const campName=getName(camp),campRes=camp.campaign?.resourceName||'';
-    if(campFilter&&!campName.toLowerCase().includes(campFilter))return;
-    const geoForCamp=geoRows.filter(g=>g.campaign.resourceName===campRes);
-    const campKey=`${tbodyId}_${campRes}`;
-    if(geoForCamp.length>0){
-      const filtered=countryFilter?geoForCamp.filter(g=>g.country===countryFilter):geoForCamp;
-      if(!filtered.length)return;hasRows=true;
-      const status=getStatus(camp),statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
-      const isExp=expandedCamp[campKey];
-      const headTr=document.createElement('tr');headTr.className='camp-header-row';
-      headTr.onclick=()=>toggleCampDetail(campKey,filtered,isVideo,headTr);
-      headTr.innerHTML=`<td style="text-align:left"><span class="expand-icon${isExp?' expanded':''}" id="icon_${campKey}">▶</span>${shortName(campName)}</td>`+
-        `<td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td>`+
-        `<td colspan="${cols-2}" style="text-align:right;color:var(--up-gray);font-size:11px">${filtered.length} país${filtered.length!==1?'es':''}</td>`;
-      tbody.appendChild(headTr);
-      if(isExp)filtered.forEach(g=>tbody.appendChild(buildGeoRow(g,isVideo,campKey)));
-    } else {
-      if(countryFilter)return;hasRows=true;
-      const m=camp.metrics||{};
-      const spend=Number(m.costMicros||0)/1e6,imp=Number(m.impressions||0),clk=Number(m.clicks||0),conv=Number(m.conversions||0);
-      const ctr=imp?(clk/imp):0,cpm=imp?((spend/imp)*1000):0,cpp=conv?(spend/conv):0;
-      const status=getStatus(camp),statusLabel=status==='ENABLED'?'Activa':status==='PAUSED'?'Pausada':'Eliminada';
-      const tr=document.createElement('tr');
-      if(isVideo){tr.innerHTML=`<td style="text-align:left">${shortName(campName)}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td>${camp.countries||'—'}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${curr(cpm)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;}
-      else{tr.innerHTML=`<td style="text-align:left">${shortName(campName)}</td><td style="text-align:left"><span class="badge ${status}">${statusLabel}</span></td><td>${camp.countries||'—'}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;}
-      tbody.appendChild(tr);
-    }
-  });
-  if(!hasRows){const tr=document.createElement('tr');tr.innerHTML=`<td colspan="${cols}" class="center">Sin resultados.</td>`;tbody.appendChild(tr);}
-}
-
-function buildGeoRow(g,isVideo,campKey){
-  const m=g.metrics||{};
-  const spend=Number(m.costMicros||0)/1e6,imp=Number(m.impressions||0),clk=Number(m.clicks||0),conv=Number(m.conversions||0);
-  const ctr=imp?(clk/imp):0,cpm=imp?((spend/imp)*1000):0,cpp=conv?(spend/conv):0;
-  const tr=document.createElement('tr');tr.className='geo-detail-row';tr.dataset.campKey=campKey;
-  if(isVideo){tr.innerHTML=`<td style="text-align:left">↳ ${g.country}</td><td>—</td><td>${g.country}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${curr(cpm)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;}
-  else{tr.innerHTML=`<td style="text-align:left">↳ ${g.country}</td><td>—</td><td>${g.country}</td><td>${curr(spend)}</td><td>${pct(ctr)}</td><td>${conv.toFixed(1)}</td><td>${cpp?curr(cpp):'—'}</td>`;}
-  return tr;
-}
-
-function toggleCampDetail(campKey,filtered,isVideo,headTr){
-  const isExp=expandedCamp[campKey];expandedCamp[campKey]=!isExp;
-  const icon=document.getElementById(`icon_${campKey}`);if(icon)icon.classList.toggle('expanded');
-  document.querySelectorAll(`[data-camp-key="${campKey}"]`).forEach(e=>e.remove());
-  if(!isExp){let after=headTr;filtered.forEach(g=>{const row=buildGeoRow(g,isVideo,campKey);after.after(row);after=row;});}
-}
-
 function switchPage(el,pageId){
   document.querySelectorAll('.page-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');document.getElementById(pageId).classList.add('active');
-}
-
-function switchLevel(el,level){
-  document.querySelectorAll('.level-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');currentLevel=level;
-  const since=document.getElementById('dateFrom').value;
-  const until=document.getElementById('dateTo').value;
-  loadGads(since,until);
 }
 
 window.addEventListener('load',()=>loadAll());
