@@ -200,7 +200,6 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
 
 <div class="page-tabs">
   <div class="page-tab active" onclick="switchPage(this,'pageResumen')">Google Ads | Performance por Facultad</div>
-  <div class="page-tab" onclick="switchPage(this,'pageCampanas')">Google Ads | Performance por Campaña</div>
   <div class="page-tab" onclick="switchPage(this,'pageMeta')">Meta Ads | Performance por Campaña</div>
 </div>
 
@@ -217,48 +216,6 @@ tbody tr.geo-detail-row:hover td{background:var(--up-light)}
   <div class="section">
     <div class="section-header"><h2>Costo por Lead por Facultad</h2></div>
     <div class="pivot-table-wrap"><table><thead><tr id="headCPL"></tr></thead><tbody id="bodyCPL"></tbody></table></div>
-  </div>
-</div>
-
-<!-- PAGE 2 -->
-<div class="page" id="pageCampanas">
-  <div class="level-tabs">
-    <div class="level-tab active" onclick="switchLevel(this,'campaign')">Campañas</div>
-    <div class="level-tab" onclick="switchLevel(this,'adset')">Conjuntos de anuncios</div>
-    <div class="level-tab" onclick="switchLevel(this,'ad')">Anuncios</div>
-  </div>
-  <div class="section">
-    <div class="section-header"><h2>Search</h2><span class="type-badge search-badge">Search</span></div>
-    <div class="filters">
-      <input type="text" id="filterSearchCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
-      <select id="filterSearchCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
-    </div>
-    <div class="table-wrap"><table>
-      <thead><tr><th style="text-align:left;width:35%">Nombre</th><th style="text-align:left">Estado</th><th>País</th><th>Gasto</th><th>CTR</th><th>Conv.</th><th>Costo/conv.</th></tr></thead>
-      <tbody id="tableSearch"><tr><td colspan="7" class="center">Cargando...</td></tr></tbody>
-    </table></div>
-  </div>
-  <div class="section">
-    <div class="section-header"><h2>Performance Max</h2><span class="type-badge pmax-badge">PMax</span></div>
-    <div class="filters">
-      <input type="text" id="filterPmaxCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
-      <select id="filterPmaxCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
-    </div>
-    <div class="table-wrap"><table>
-      <thead><tr><th style="text-align:left;width:35%">Nombre</th><th style="text-align:left">Estado</th><th>País</th><th>Gasto</th><th>CTR</th><th>Conv.</th><th>Costo/conv.</th></tr></thead>
-      <tbody id="tablePmax"><tr><td colspan="7" class="center">Cargando...</td></tr></tbody>
-    </table></div>
-  </div>
-  <div class="section">
-    <div class="section-header"><h2>Video</h2><span class="type-badge video-badge">Video</span></div>
-    <div class="filters">
-      <input type="text" id="filterVideoCampaign" placeholder="Filtrar por campaña..." oninput="renderCampaignTables()"/>
-      <select id="filterVideoCountry" onchange="renderCampaignTables()"><option value="">Todos los países</option></select>
-    </div>
-    <div class="table-wrap"><table>
-      <thead><tr><th style="text-align:left;width:35%">Nombre</th><th style="text-align:left">Estado</th><th>País</th><th>Gasto</th><th>CTR</th><th>CPM</th><th>Conv.</th><th>Costo/conv.</th></tr></thead>
-      <tbody id="tableVideo"><tr><td colspan="8" class="center">Cargando...</td></tr></tbody>
-    </table></div>
   </div>
 </div>
 
